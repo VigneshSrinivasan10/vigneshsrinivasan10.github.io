@@ -1,0 +1,8 @@
+@inproceedings{srinivasan2015shot,
+  title={Shot aggregating strategy for near-duplicate video retrieval},
+  author={Srinivasan, Vignesh and Lefebvre, Frederic and Ozerov, Alexey},
+  booktitle={2015 23rd European Signal Processing Conference (EUSIPCO)},
+  pages={1825--1829},
+  year={2015},
+  organization={IEEE}
+}

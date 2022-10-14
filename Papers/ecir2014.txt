@@ -1,0 +1,8 @@
+@inproceedings{van2014analyzing,
+  title={Analyzing tweets to aid situational awareness},
+  author={van Kasteren, Tim LM and Ulrich, Birte and Srinivasan, Vignesh and Niessen, Maria E},
+  booktitle={European Conference on Information Retrieval},
+  pages={700--705},
+  year={2014},
+  organization={Springer}
+}
