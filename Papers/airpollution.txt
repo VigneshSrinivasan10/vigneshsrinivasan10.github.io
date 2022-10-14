@@ -1,0 +1,8 @@
+@article{petry2020air,
+  title={Air Quality Monitoring and Data Management in Germany-Status Quo and Suggestions for Improvement},
+  author={Petry, Lisanne and Herold, Hendrik and Meinel, Gotthard and Meiers, Thomas and M{\"u}ller, Inken and Kalusche, Elena and Erbertseder, Thilo and Taubenb{\"o}ck, Hannes and Zaunseder, Elaine and Srinivasan, Vignesh and others},
+  journal={The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
+  volume={44},
+  pages={37--43},
+  year={2020}
+}
