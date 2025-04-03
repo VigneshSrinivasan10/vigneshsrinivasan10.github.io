@@ -63,9 +63,175 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-a {
-  color: #1772d0;
+/* Base styles */
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header and Navigation */
+header {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin-bottom: 15px;
+  font-size: 2.5em;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+nav ul li a {
   text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+nav ul li a:hover {
+  color: #0366d6;
+}
+
+/* Section styling */
+section {
+  margin-bottom: 60px;
+}
+
+section h2 {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+/* Profile container */
+.profile-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.profile-content {
+  flex: 1;
+  min-width: 300px;
+}
+
+.profile-image {
+  flex: 0 0 250px;
+  text-align: center;
+}
+
+.profile-image img {
+  width: 100%;
+  max-width: 250px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Publications styling */
+.publication-item {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  gap: 20px;
+}
+
+.publication-image {
+  flex: 0 0 200px;
+}
+
+.publication-image img {
+  width: 100%;
+  max-width: 200px;
+}
+
+.publication-content {
+  flex: 1;
+  min-width: 300px;
+}
+
+.papertitle {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.authors, .venue, .links {
+  margin: 5px 0;
+}
+
+.abstract {
+  margin-top: 10px;
+}
+
+/* Thesis styling */
+.thesis-item {
+  margin-bottom: 30px;
+}
+
+/* Blog list styling */
+.blog-list {
+  margin-top: 20px;
+}
+
+/* Footer */
+footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  text-align: center;
+  font-size: 0.9em;
+  color: #777;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-container, .publication-item {
+    flex-direction: column;
+  }
+  
+  .profile-image {
+    order: -1;
+    margin-bottom: 20px;
+  }
+  
+  .publication-image {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+}
+
+/* Links styling */
+a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 a:focus,
@@ -140,5 +306,92 @@ h3 {
 
 span.highlight {
   background-color: #ffffd0;
+}
+
+/* Blog styling */
+.blog-list ul.recent-posts {
+  list-style: none;
+  padding: 0;
+}
+
+.blog-list ul.recent-posts li {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.blog-date {
+  color: #777;
+  margin-right: 10px;
+  font-size: 0.9em;
+}
+
+.more-link {
+  margin-top: 20px;
+  text-align: right;
+}
+
+/* Blog post styling */
+.blog-post {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.post-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.post-header h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.post-meta {
+  color: #777;
+  font-style: italic;
+}
+
+.post-content h2 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+
+.post-content p {
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.post-content ul, .post-content ol {
+  margin-bottom: 20px;
+  padding-left: 30px;
+}
+
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 20px 0;
+}
+
+/* Blog archive styling */
+.blog-year {
+  margin-bottom: 30px;
+}
+
+.blog-year h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+#blog-archive ul.blog-list {
+  list-style: none;
+  padding: 0;
+}
+
+#blog-archive ul.blog-list li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
 
