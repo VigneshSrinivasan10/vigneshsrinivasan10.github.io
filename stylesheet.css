@@ -65,61 +65,63 @@
 
 /* Base styles */
 body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
   line-height: 1.6;
   color: #333;
   background-color: #fff;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 0;
 }
 
 /* Header and Navigation */
 header {
   margin-bottom: 40px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 20px;
-  text-align: center;
+  text-align: left;
 }
 
 header h1 {
-  margin-bottom: 15px;
-  font-size: 2.5em;
+  margin-bottom: 10px;
+  font-size: 2em;
+  font-weight: normal;
 }
 
 nav ul {
   list-style: none;
   padding: 0;
   display: flex;
-  justify-content: center;
-  gap: 30px;
+  gap: 20px;
 }
 
 nav ul li a {
   text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  font-size: 1.2em;
+  color: #666;
+  font-size: 1em;
 }
 
 nav ul li a:hover {
-  color: #0366d6;
+  color: #333;
 }
 
 /* Section styling */
 section {
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 section h2 {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-  margin-bottom: 30px;
+  font-size: 1.5em;
+  font-weight: normal;
+  margin-bottom: 20px;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 /* Profile container */
@@ -136,19 +138,19 @@ section h2 {
 }
 
 .profile-image {
-  flex: 0 0 250px;
+  flex: 0 0 200px;
   text-align: center;
 }
 
 .profile-image img {
   width: 100%;
-  max-width: 250px;
-  border-radius: 50%;
+  max-width: 200px;
+  border-radius: 0;
   object-fit: cover;
 }
 
 .links {
-  text-align: center;
+  text-align: left;
   margin-top: 20px;
 }
 
@@ -156,17 +158,17 @@ section h2 {
 .publication-item {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   gap: 20px;
 }
 
 .publication-image {
-  flex: 0 0 200px;
+  flex: 0 0 150px;
 }
 
 .publication-image img {
   width: 100%;
-  max-width: 200px;
+  max-width: 150px;
 }
 
 .publication-content {
@@ -175,16 +177,18 @@ section h2 {
 }
 
 .papertitle {
-  font-weight: bold;
-  font-size: 1.1em;
+  font-weight: normal;
+  font-size: 1em;
 }
 
 .authors, .venue, .links {
   margin: 5px 0;
+  font-size: 0.9em;
 }
 
 .abstract {
   margin-top: 10px;
+  font-size: 0.9em;
 }
 
 /* Thesis styling */
@@ -197,14 +201,39 @@ section h2 {
   margin-top: 20px;
 }
 
+.blog-list ul.recent-posts {
+  list-style: none;
+  padding: 0;
+}
+
+.blog-list ul.recent-posts li {
+  margin-bottom: 15px;
+}
+
+.blog-date {
+  color: #666;
+  font-size: 0.9em;
+}
+
 /* Footer */
 footer {
-  margin-top: 60px;
+  margin-top: 40px;
   padding-top: 20px;
   border-top: 1px solid #eee;
-  text-align: center;
+  text-align: left;
   font-size: 0.9em;
-  color: #777;
+  color: #666;
+}
+
+/* Links styling */
+a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0366d6;
+  text-decoration: underline;
 }
 
 /* Responsive adjustments */
@@ -224,164 +253,82 @@ footer {
   }
 }
 
-/* Links styling */
-a {
-  color: #0366d6;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-a:focus,
-a:hover {
-  color: #f09228;
-  text-decoration: none;
-}
-
-body,
-td,
-th,
-tr,
-p,
-a {
+/* Typography */
+body, td, th, tr, p, a {
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 strong {
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 14px;
+  font-weight: normal;
 }
 
 h2 {
-  margin: 0;
+  font-size: 1.5em;
   font-weight: normal;
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 22px;
+  margin: 1.5em 0 1em;
 }
 
 h3 {
-  margin: 0;
+  font-size: 1.2em;
   font-weight: normal;
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 22px;
-  color: #ffa500;
+  margin: 1.2em 0 0.8em;
 }
 
 .papertitle {
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 14px;
-  font-weight: 700;
+  font-weight: normal;
+  font-size: 1em;
 }
 
 .name {
-  padding-top: 20px;
-  margin: 0;
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 32px;
+  font-size: 1.2em;
+  font-weight: normal;
 }
 
-.one {
-  width: 160px;
-  height: 160px;
-  position: relative;
-}
-
-.two {
-  width: 160px;
-  height: 160px;
-  position: absolute;
-  transition: opacity .2s ease-in-out;
-  -moz-transition: opacity .2s ease-in-out;
-  -webkit-transition: opacity .2s ease-in-out;
-}
-
-.fade {
-  transition: opacity .2s ease-in-out;
-  -moz-transition: opacity .2s ease-in-out;
-  -webkit-transition: opacity .2s ease-in-out;
-}
-
-span.highlight {
-  background-color: #ffffd0;
-}
-
-/* Blog styling */
-.blog-list ul.recent-posts {
-  list-style: none;
-  padding: 0;
-}
-
-.blog-list ul.recent-posts li {
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
-}
-
-.blog-date {
-  color: #777;
-  margin-right: 10px;
-  font-size: 0.9em;
-}
-
-.more-link {
-  margin-top: 20px;
-  text-align: right;
-}
-
-/* Blog post styling */
+/* Blog specific styles */
 .blog-post {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.post-header {
-  margin-bottom: 30px;
-  text-align: center;
+  margin-bottom: 40px;
 }
 
 .post-header h1 {
-  font-size: 2em;
+  font-size: 1.8em;
+  font-weight: normal;
   margin-bottom: 10px;
 }
 
 .post-meta {
-  color: #777;
-  font-style: italic;
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 20px;
 }
 
 .post-content h2 {
-  margin-top: 30px;
-  margin-bottom: 15px;
   font-size: 1.5em;
+  margin: 1.5em 0 1em;
 }
 
 .post-content p {
-  margin-bottom: 20px;
-  line-height: 1.7;
+  margin-bottom: 1em;
 }
 
 .post-content ul, .post-content ol {
-  margin-bottom: 20px;
-  padding-left: 30px;
+  margin-bottom: 1em;
+  padding-left: 1.5em;
 }
 
 .post-content img {
   max-width: 100%;
   height: auto;
-  margin: 20px 0;
+  margin: 1em 0;
 }
 
-/* Blog archive styling */
 .blog-year {
   margin-bottom: 30px;
 }
 
 .blog-year h3 {
+  font-size: 1.2em;
   margin-bottom: 15px;
-  color: #333;
 }
 
 #blog-archive ul.blog-list {
@@ -390,8 +337,6 @@ span.highlight {
 }
 
 #blog-archive ul.blog-list li {
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
 }
 
