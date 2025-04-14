@@ -29,49 +29,88 @@
 
       <article class="blog-post">
         <header class="post-header">
-          <h1>Introduction to Score-based Generative Models</h1>
-          <p class="post-meta">June 15, 2025</p>
+          <h1>Scaling Recipes for Training Large Neural Networks</h1>
+          <p class="post-meta">April 15, 2025</p>
         </header>
 
         <div class="post-content">
           <p>
-            This is a sample blog post about score-based generative models. Replace this with your actual content.
+            This blog post gives a brief overview of how to bake a bigger loaf of bread and also how to scale training of large neural networks. 
           </p>
+
+          <div style="text-align: center;">
+            <img src="../images/sourdough_bread.png" alt="Baking bread is not very different from training neural networks" class="blog-image" style="width: 50%;">
+          </div>
           
-          <h2>What are Score-based Generative Models?</h2>
-          <p>
-            Score-based generative models are a class of generative models that use score matching to learn the gradient of the log probability density function of the data distribution. This approach has gained significant attention in recent years due to its impressive performance in generating high-quality samples.
-          </p>
           
-          <h2>Key Concepts</h2>
+          <h2>Why scale?</h2>
           <p>
-            The score function is defined as the gradient of the log probability density function:
+            A bigger loaf of bread is better than a smaller one for many reasons: it tastes better, it has unique flavors as well as textures.
+            Scaling is important for neural networks because it improves the performance of the model on the given task, be it classification, language modeling, or image generation.
+            Scalability is limited by all three aspects: data, compute, and model size.
           </p>
-          <p>
-            \[ \nabla_x \log p(x) \]
+
+          <div style="text-align: center;">
+            <img src="../images/scaling_law_kaplan.png" alt="Analogy between scaling neural networks and baking bread" class="blog-image">
+          </div>
+          <p class="image-caption">
+            Figure from <a href="https://arxiv.org/abs/2001.08361">Scaling Laws for Neural Language Models</a> by Kaplan et al. 
+            showing how model performance improves with compute, data and model size.
           </p>
-          
+
+          <h2>Challenges in scaling</h2>
           <p>
-            In score-based generative models, we typically:
+            It is easy to understand that scaling is important, but far difficult to scale in practice.
+
+            The hardware (oven size) is often limited to a given size. This leaves us with the amount of flour that can be scaled within the oven.
+            Yet, simply increasing the amount of flour, can result in a bread that is too dense or undercooked.
+
+            Similarly, given fixed compute resources and data available to us, we can scale by increasing the model size.
+            Although, now the only parameter that we control is the model size, it is still a very challenging task to scale the model effectively.
+            Bigger models are very finicky and are very expensive ($$$) to explore. 
+          </p>
+
+          <h2>Scaling recipes</h2>
+          <p>
+            This is where μ-Parametrization (μP) comes in. 
+            μP is a principled approach to scaling neural networks that ensures consistent training dynamics across different model sizes. 
+            By following simple guidelines, μP helps maintain stable gradients and convergence properties as models grow larger.
           </p>
           <ol>
-            <li>Train a neural network to estimate the score function</li>
-            <li>Use Langevin dynamics to sample from the learned distribution</li>
+            <li>Initialize the weights with unit scale by a factor proportional to the width of the network</li>
+            <li>Make sure the weights are properly scaled after gradient updates by tuning the learning rate</li>
           </ol>
           
-          <h2>Applications in Fashion</h2>
+          This is essentially a recipe describing the hydration level, time to proof the dough, and time to bake the bread.
+          All that is left is to bake the bread and see the results!
+
+          <h2>Results</h2>
           <p>
-            At Zalando, we've been exploring applications of score-based generative models for fashion image generation. Some potential applications include:
+            We test μP on the MNIST dataset.
+            The hyperparameters (HP) tuned here are the model width and learning rate.
           </p>
-          <ul>
-            <li>Virtual try-on</li>
-            <li>Outfit completion</li>
-            <li>Style transfer</li>
-          </ul>
+          <div style="text-align: center;">
+            <img src="../images/sweep_metrics_mup.png" alt="mup" class="blog-image">
+          </div>
           
+          <div style="text-align: center;">
+            <img src="../images/sweep_metrics_sp.png" alt="sp" class="blog-image">
+          </div>
+
+          <h2>Conclusion</h2>
           <p>
-            More details coming soon!
+            μP is a simple and effective recipe for scaling neural networks.
+            It ensures consistent training dynamics across different model sizes and shows convergence at the same HP setting for all model sizes.
+            If you plan to train a large neural network, first try out a large number of small models to find the HP setting that works best for you.
+            Transfer the best HP setting to your large model.
+
+            Similarly, if you plan to bake a big loaf of bread, 
+            first try out a large number of small bread sizes to find the recipe that works best for you!
           </p>
+
+          Try out the recipe yourself!
+          <a href="https://github.com/VigneshSrinivasan10/scaling-recipes/">Scaling Recipes</a>
+          
         </div>
       </article>
 
