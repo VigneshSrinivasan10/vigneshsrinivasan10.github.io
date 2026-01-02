@@ -1,0 +1,51 @@
+# Site settings
+title: Vignesh Srinivasan
+description: Personal website and blog of Vignesh Srinivasan 
+url: "https://vigneshsrinivasan10.github.io"
+baseurl: ""
+author: Vignesh Srinivasan
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  parse_block_html: true
+  syntax_highlighter: rouge
+
+# Permalinks
+permalink: /blog/:year/:month/:day/:title/
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /blog/:year/:month/:day/:title/
+
+# Default front matter
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Vignesh Srinivasan"
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - _site
+  - node_modules
+
+# Plugins (GitHub Pages supported)
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
