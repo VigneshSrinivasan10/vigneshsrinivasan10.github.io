@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <!-- ========== PART A: Single Forward Pass with Condition ========== -->
+
+  <!-- Title A -->
+  <text x="200" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">(a) Single Forward Pass</text>
+
+  <!-- Noisy Input x_t - small square with noise dots -->
+  <rect x="30" y="50" width="60" height="60" rx="4" fill="#f0f0f0" stroke="#666" stroke-width="1.5"/>
+  <!-- Noise texture dots -->
+  <g fill="#999" opacity="0.6">
+    <circle cx="45" cy="65" r="2"/>
+    <circle cx="60" cy="70" r="1.5"/>
+    <circle cx="55" cy="85" r="2"/>
+    <circle cx="70" cy="60" r="1.5"/>
+    <circle cx="50" cy="95" r="1.8"/>
+    <circle cx="75" cy="80" r="1.5"/>
+    <circle cx="42" cy="78" r="1.2"/>
+    <circle cx="68" cy="92" r="1.8"/>
+    <circle cx="80" cy="68" r="1.2"/>
+  </g>
+  <text x="56" y="130" font-family="Arial, sans-serif" font-size="12" fill="#333">x</text>
+  <text x="64" y="134" font-family="Arial, sans-serif" font-size="9" fill="#333">t</text>
+
+  <!-- Arrow to DNN -->
+  <line x1="95" y1="80" x2="135" y2="80" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- DNN Block - rectangle slightly bigger than square -->
+  <rect x="145" y="45" width="110" height="70" rx="5" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="200" y="85" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#0369a1" text-anchor="middle">DNN</text>
+
+  <!-- Time input t -->
+  <rect x="170" y="135" width="30" height="22" rx="3" fill="#fff" stroke="#666" stroke-width="1"/>
+  <text x="185" y="150" font-family="Arial, sans-serif" font-size="11" fill="#333" text-anchor="middle">t</text>
+
+  <!-- Straight arrow from t to DNN -->
+  <line x1="185" y1="135" x2="185" y2="115" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Condition input c -->
+  <rect x="210" y="135" width="30" height="22" rx="3" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+  <text x="225" y="150" font-family="Arial, sans-serif" font-size="11" fill="#92400e" text-anchor="middle">c</text>
+
+  <!-- Straight arrow from c to DNN -->
+  <line x1="225" y1="135" x2="225" y2="115" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- DNN Block - rectangle slightly bigger than square -->
+  <rect x="145" y="45" width="110" height="70" rx="5" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="200" y="85" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#0369a1" text-anchor="middle">DNN</text>
+
+  <!-- Arrow from DNN to output -->
+  <line x1="260" y1="80" x2="300" y2="80" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Output velocity - square with arrow inside -->
+  <rect x="310" y="50" width="60" height="60" rx="4" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+  <!-- Arrow symbol inside -->
+  <path d="M 325 80 L 355 80 M 348 70 L 360 80 L 348 90" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="320" y="130" font-family="Arial, sans-serif" font-size="12" fill="#333">v(x</text>
+  <text x="340" y="134" font-family="Arial, sans-serif" font-size="9" fill="#333">t</text>
+  <text x="347" y="130" font-family="Arial, sans-serif" font-size="12" fill="#333">, t, c)</text>
+
+  <!-- ========== PART B: Conditional Sampling to Right Eye ========== -->
+
+  <!-- Divider -->
+  <line x1="400" y1="10" x2="400" y2="150" stroke="#ccc" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- Title B -->
+  <text x="600" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">(b) Conditional Sampling: c = left eye</text>
+
+  <!-- Gaussian noise - scattered blue dots -->
+  <g fill="#60a5fa" opacity="0.7">
+    <!-- Dense center cluster -->
+    <circle cx="450" cy="78" r="3.5"/><circle cx="445" cy="85" r="3"/><circle cx="458" cy="82" r="3.2"/>
+    <circle cx="442" cy="75" r="2.8"/><circle cx="455" cy="72" r="3"/><circle cx="448" cy="90" r="2.5"/>
+    <circle cx="462" cy="88" r="2.8"/><circle cx="438" cy="82" r="2.6"/><circle cx="452" cy="68" r="2.8"/>
+    <circle cx="465" cy="76" r="2.5"/><circle cx="435" cy="90" r="2.4"/><circle cx="460" cy="95" r="2.6"/>
+    <circle cx="443" cy="70" r="2.5"/><circle cx="468" cy="85" r="2.3"/><circle cx="432" cy="78" r="2.4"/>
+    <!-- Sparser outer dots -->
+    <circle cx="470" cy="65" r="2.2"/><circle cx="428" cy="68" r="2.3"/><circle cx="475" cy="92" r="2.1"/>
+    <circle cx="425" cy="95" r="2.2"/><circle cx="472" cy="100" r="2"/><circle cx="430" cy="102" r="2.1"/>
+    <circle cx="478" cy="78" r="2"/><circle cx="420" cy="85" r="2.2"/><circle cx="440" cy="105" r="2"/>
+    <circle cx="465" cy="60" r="2"/><circle cx="435" cy="58" r="2.1"/><circle cx="455" cy="55" r="1.9"/>
+    <circle cx="480" cy="70" r="1.8"/><circle cx="418" cy="75" r="1.9"/><circle cx="468" cy="105" r="1.8"/>
+    <circle cx="422" cy="105" r="1.9"/><circle cx="448" cy="52" r="1.8"/><circle cx="460" cy="110" r="1.7"/>
+    <circle cx="438" cy="112" r="1.8"/><circle cx="475" cy="58" r="1.7"/><circle cx="425" cy="60" r="1.8"/>
+    <!-- Even sparser edge dots -->
+    <circle cx="485" cy="82" r="1.5"/><circle cx="412" cy="80" r="1.6"/><circle cx="450" cy="115" r="1.5"/>
+    <circle cx="482" cy="95" r="1.4"/><circle cx="415" cy="98" r="1.5"/><circle cx="445" cy="48" r="1.4"/>
+    <circle cx="462" cy="48" r="1.3"/><circle cx="430" cy="115" r="1.4"/><circle cx="472" cy="112" r="1.3"/>
+  </g>
+  <text x="450" y="145" font-family="Arial, sans-serif" font-size="11" fill="#666" text-anchor="middle">noise</text>
+  <text x="450" y="158" font-family="Arial, sans-serif" font-size="10" fill="#999" text-anchor="middle">t = 0</text>
+
+  <!-- Conditional trajectory going to right eye -->
+
+  <!-- Dashed trajectory line - curved toward right eye -->
+  <path d="M 490 80 Q 520 65 560 60 Q 620 55 700 55 Q 750 55 770 60" stroke="#f97316" stroke-width="2" fill="none" stroke-dasharray="6,4" opacity="0.6"/>
+
+  <!-- Point 1 -->
+  <circle cx="505" cy="68" r="5" fill="#a855f7" stroke="white" stroke-width="1.5"/>
+
+  <!-- Velocity arrow from point 1 -->
+  <line x1="510" y1="66" x2="530" y2="60" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Point 2 -->
+  <circle cx="550" cy="58" r="5" fill="#8b5cf6" stroke="white" stroke-width="1.5"/>
+
+  <!-- Velocity arrow from point 2 -->
+  <line x1="555" y1="58" x2="580" y2="58" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Point 3 -->
+  <circle cx="615" cy="58" r="5" fill="#7c3aed" stroke="white" stroke-width="1.5"/>
+
+  <!-- Velocity arrow from point 3 -->
+  <line x1="620" y1="58" x2="650" y2="58" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Point 4 -->
+  <circle cx="685" cy="58" r="5" fill="#6d28d9" stroke="white" stroke-width="1.5"/>
+
+  <!-- Velocity arrow from point 4 -->
+  <line x1="690" y1="58" x2="720" y2="58" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Final point at right eye -->
+  <circle cx="755" cy="58" r="5" fill="#22c55e" stroke="white" stroke-width="1.5"/>
+
+  <!-- Label for velocity arrows -->
+  <text x="570" y="38" font-family="Arial, sans-serif" font-size="10" fill="#3b82f6" text-anchor="middle">velocity</text>
+
+  <!-- Smiley face made of scattered blue dots -->
+  <g fill="#60a5fa" opacity="0.8">
+    <!-- Left eye cluster (dimmed) -->
+    <circle cx="732" cy="55" r="3" opacity="0.3"/><circle cx="736" cy="52" r="2.8" opacity="0.3"/><circle cx="728" cy="53" r="2.6" opacity="0.3"/>
+    <circle cx="734" cy="59" r="2.5" opacity="0.3"/><circle cx="730" cy="57" r="2.8" opacity="0.3"/><circle cx="738" cy="56" r="2.4" opacity="0.3"/>
+    <circle cx="726" cy="56" r="2.3" opacity="0.3"/><circle cx="732" cy="51" r="2.4" opacity="0.3"/><circle cx="736" cy="59" r="2.5" opacity="0.3"/>
+    <circle cx="729" cy="60" r="2.2" opacity="0.3"/><circle cx="740" cy="54" r="2.2" opacity="0.3"/><circle cx="724" cy="55" r="2.1" opacity="0.3"/>
+    <circle cx="733" cy="48" r="2" opacity="0.3"/><circle cx="727" cy="50" r="2.1" opacity="0.3"/><circle cx="738" cy="50" r="2" opacity="0.3"/>
+
+    <!-- Right eye cluster (highlighted) -->
+    <circle cx="772" cy="55" r="3"/><circle cx="776" cy="52" r="2.8"/><circle cx="768" cy="53" r="2.6"/>
+    <circle cx="774" cy="59" r="2.5"/><circle cx="770" cy="57" r="2.8"/><circle cx="778" cy="56" r="2.4"/>
+    <circle cx="766" cy="56" r="2.3"/><circle cx="772" cy="51" r="2.4"/><circle cx="776" cy="59" r="2.5"/>
+    <circle cx="769" cy="60" r="2.2"/><circle cx="780" cy="54" r="2.2"/><circle cx="764" cy="55" r="2.1"/>
+    <circle cx="773" cy="48" r="2"/><circle cx="767" cy="50" r="2.1"/><circle cx="778" cy="50" r="2"/>
+
+    <!-- Smile arc - scattered dots along curve (dimmed) -->
+    <circle cx="720" cy="90" r="2.5" opacity="0.3"/><circle cx="725" cy="95" r="2.6" opacity="0.3"/><circle cx="730" cy="100" r="2.8" opacity="0.3"/>
+    <circle cx="735" cy="103" r="2.7" opacity="0.3"/><circle cx="740" cy="106" r="2.8" opacity="0.3"/><circle cx="745" cy="108" r="2.9" opacity="0.3"/>
+    <circle cx="752" cy="109" r="3" opacity="0.3"/><circle cx="759" cy="108" r="2.9" opacity="0.3"/><circle cx="764" cy="106" r="2.8" opacity="0.3"/>
+    <circle cx="769" cy="103" r="2.7" opacity="0.3"/><circle cx="774" cy="100" r="2.8" opacity="0.3"/><circle cx="779" cy="95" r="2.6" opacity="0.3"/>
+    <circle cx="784" cy="90" r="2.5" opacity="0.3"/>
+    <!-- Additional smile dots for density -->
+    <circle cx="722" cy="92" r="2.2" opacity="0.3"/><circle cx="727" cy="97" r="2.3" opacity="0.3"/><circle cx="732" cy="102" r="2.4" opacity="0.3"/>
+    <circle cx="737" cy="105" r="2.3" opacity="0.3"/><circle cx="742" cy="107" r="2.4" opacity="0.3"/><circle cx="748" cy="109" r="2.5" opacity="0.3"/>
+    <circle cx="756" cy="109" r="2.5" opacity="0.3"/><circle cx="762" cy="107" r="2.4" opacity="0.3"/><circle cx="767" cy="105" r="2.3" opacity="0.3"/>
+    <circle cx="772" cy="102" r="2.4" opacity="0.3"/><circle cx="777" cy="97" r="2.3" opacity="0.3"/><circle cx="782" cy="92" r="2.2" opacity="0.3"/>
+    <!-- Inner smile arc -->
+    <circle cx="733" cy="98" r="2" opacity="0.3"/><circle cx="738" cy="101" r="2.1" opacity="0.3"/><circle cx="743" cy="104" r="2.2" opacity="0.3"/>
+    <circle cx="752" cy="106" r="2.3" opacity="0.3"/><circle cx="761" cy="104" r="2.2" opacity="0.3"/><circle cx="766" cy="101" r="2.1" opacity="0.3"/>
+    <circle cx="771" cy="98" r="2" opacity="0.3"/>
+  </g>
+
+  <text x="752" cy="145" font-family="Arial, sans-serif" font-size="11" fill="#666" text-anchor="middle">data</text>
+  <text x="752" y="158" font-family="Arial, sans-serif" font-size="10" fill="#999" text-anchor="middle">t = 1</text>
+
+  <!-- Highlight the target right eye -->
+  <circle cx="772" cy="55" r="8" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="3,3" opacity="0.8"/>
+</svg>
