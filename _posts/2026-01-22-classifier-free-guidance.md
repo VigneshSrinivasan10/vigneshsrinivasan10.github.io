@@ -32,27 +32,42 @@ For simplicity, we will assume a flow matching model for the rest of the post.
 
 *Figure 1: (a) A single forward pass through the model takes noisy input x_t and timestep t, producing a velocity/score prediction. (b) Iterative sampling follows these velocity predictions step-by-step from noise distribution to data distribution. (c) The model learns a vector field that transports samples from a Gaussian distribution $\mathcal{N}(0, 1)$ to the target distribution $p(\mathbf{x})$*
 
+## Classifier Guided Generation
+A natural design choice is to train the generative model on the entire dataset unconditionally and then use a classifier to guide the sampling process. However, this approach has two major drawbacks: 
+1. The mode-collapse: an unconditionally trained model may not be able to capture the low density regions, areas with fewer training samples, of the target distribution well. 
+2. Gradient issues: guidance takes the form of: 
+
+$$\nabla_x \log p(x_t, c) = \nabla_x \log p_{g}(x_t) + \lambda \nabla_x \log p_{cls}(c \mid x_t)$$
+
+where $p_{g}(x_{t})$ is the unconditional distribution, $\lambda$ is a hyperparameter that controls the strength of the guidance and $p_{cls}(c \mid x_t)$  is the conditional distribution coming from a classifier.  
+
+First, the classifier should have learned a good representation of the condition such that the gradient of the conditional distribution is usable for the sampling process. Second, the difficulty lies combining the gradients effectively by tuning $\lambda$ during inference [^dhariwal2021diffusion].
+
+## Conditional Generation
+So far, we have only seen the unconditional generation case. Conditioning is the process of guiding the sampling process towards a specific region of the target distribution and can be fed to the model via class label, text prompt, or other information. 
+
+![Conditional Generation Visualization](/images/classifier_free_guidance_visual.svg)
+
+*Figure 2: (a) Single forward pass with conditional information c added to the model inputs. The velocity output now depends on both the noisy sample x_t, timestep t, and condition c. (b) Conditional sampling where c = left eye guides the trajectory specifically toward the left eye region of the target distribution.*
+
+[^dhariwal2021diffusion] also noted that the classifier-guided generation can still be helpful for an conditionally trained model, even outperforming without guidance as well as unconditionally trained models with classifier guidance. The sampling now utilizes: 
+$$\nabla_x \log p_{g}(x_t \mid c) + \lambda \nabla_x \log p_{cls}(c \mid x_t)$$
+
+Though the two terms look similar, it is not well understood why this is exactly beneficial. But the difficulty still remains in combining the gradients effectively by tuning $\lambda$ during inference. This is where classifier-free guidance comes in.
+
+
 ---
     WIP 
 ---
 
-## Conditional vs Unconditional Generation
-- What conditioning means (class label, text prompt, etc.)
-- The quality-diversity tradeoff: unconditional = diverse but unfocused; conditional = focused but can mode-collapse
-
-## Classifier Guidance
-- The original approach: train external classifier on noisy data
-- Use classifier gradients to steer generation
-- The bottleneck: requires separate classifier, noisy-data training, limited flexibility
-
 # Classifier-Free Guidance
 
-The key insight is to use a classifier to guide the sampling process. The classifier is trained to predict the class of the generated sample, and the guidance is used to improve the sample quality. The guidance is given by the following formula:
+The key insight is to use make the model learn both the conditional and unconditional distributions during training. A neat Bayesian trick proposed in [^ho2021classifierfree], allows to then make the sampling iterations to boost towards the condition:
 
-$$x = x_{uncond} + \text{cfg_scale} \cdot (x_{cond} - x_{uncond})$$
+$$x = x_{uncond} + \gamma \cdot (x_{cond} - x_{uncond})$$
 
 where $x_{uncond}$ is the generated sample without the class label, and $x_{cond}$ is the generated sample with the class label.
-The guidance scale $\text{cfg_scale}$ is a hyperparameter that controls the strength of the guidance. A higher guidance scale will produce more class-specific samples.
+The guidance scale $\gamma$ is a hyperparameter that controls the strength of the guidance. A higher guidance scale will produce more class-specific samples.
 
 ## The Algorithm
 
@@ -90,3 +105,8 @@ Is classifier-free guidance a form of temperature tuning? The answer is yes and 
 
 Yes, because the guidance scale $\text{cfg_scale}$ > $1.0$ can be interpreted as a way to reduce the temperature of the sampling process.
 No, because the outcome is a condensation of the distribution towards the class label. It is not a simple temperature reduction. Decreasing the $\text{cfg_scale}$ will not always result in a sharper distribution. In fact, it will result in a more blurred distribution.
+
+## References
+
+[^dhariwal2021diffusion]: Dhariwal, Prafulla, and Alexander Nichol. "Diffusion models beat gans on image synthesis." In *Advances in Neural Information Processing Systems* 34 (2021): 8780-8794.
+[^ho2021classifierfree]: Ho, J. and Salimans, T. "Classifier-Free Diffusion Guidance." In *Advances in Neural Information Processing Systems* (pp. 1-13). 2021.

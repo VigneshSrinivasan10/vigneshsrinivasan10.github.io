@@ -33,12 +33,12 @@
   <!-- Arrow to DNN -->
   <line x1="95" y1="80" x2="135" y2="80" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
   
-  <!-- Time input t -->
-  <rect x="100" y="140" width="30" height="22" rx="3" fill="#fff" stroke="#666" stroke-width="1"/>
-  <text x="115" y="155" font-family="Arial, sans-serif" font-size="11" fill="#333" text-anchor="middle">t</text>
-  
-  <!-- Arrow from t to DNN -->
-  <path d="M 130 151 L 175 151 L 175 120" stroke="#333" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <!-- Time input t - under DNN -->
+  <rect x="185" y="135" width="30" height="22" rx="3" fill="#fff" stroke="#666" stroke-width="1"/>
+  <text x="200" y="150" font-family="Arial, sans-serif" font-size="11" fill="#333" text-anchor="middle">t</text>
+
+  <!-- Straight arrow from t to DNN -->
+  <line x1="200" y1="135" x2="200" y2="115" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
   
   <!-- DNN Block - rectangle slightly bigger than square -->
   <rect x="145" y="45" width="110" height="70" rx="5" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
