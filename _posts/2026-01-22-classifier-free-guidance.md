@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "Classifier-Free Guidance"
+title: "Classifier-Free Guidance [WIP]"
 date: 2026-01-22
-categories: [machine-learning, generative-models, diffusion-models, flow-matching]
+#categories: [machine-learning, generative-models, diffusion-models, flow-matching]
 tags: [classifier-free-guidance, sampling, generative-models, diffusion-models, flow-matching]
 math: true
 excerpt: "An overview of classifier-free guidance for generative models."
@@ -10,7 +10,7 @@ excerpt: "An overview of classifier-free guidance for generative models."
 
 # Introduction
 
-Classifier-free guidance is a technique for improving the quality of generated samples from generative models. It has become a staple in diffusion models and flow matching for conditional generation that it is almost always used. This post takes a deep dive into the topic giving a visual explainer and at the same time trying to answer like: why do we run the model twice? is it just temperature tuning? and when should we not use it?
+Classifier-free guidance is a technique for improving the quality of generated samples from generative models. It has become a staple in diffusion models and flow matching for conditional generation that it is almost always used. This post takes a deep dive into the topic giving a visual explainer and at the same time trying to answer questions like: why do we run the model twice? is it just temperature tuning? and when should we not use it?
 
 ![CFG Trajectory Curvature](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/cfg/visualizations/cfg_vector_field.gif?raw=true)
 
@@ -32,6 +32,9 @@ For simplicity, we will assume a flow matching model for the rest of the post.
 
 *Figure 1: (a) A single forward pass through the model takes noisy input x_t and timestep t, producing a velocity/score prediction. (b) Iterative sampling follows these velocity predictions step-by-step from noise distribution to data distribution. (c) The model learns a vector field that transports samples from a Gaussian distribution $\mathcal{N}(0, 1)$ to the target distribution $p(\mathbf{x})$*
 
+---
+    WIP 
+---
 
 ## Conditional vs Unconditional Generation
 - What conditioning means (class label, text prompt, etc.)
