@@ -12,7 +12,7 @@ excerpt: "An overview of classifier-free guidance for generative models."
 
 Classifier-free guidance is a technique for improving the quality of generated samples from generative models. It has become a staple in diffusion models and flow matching for conditional generation that it is almost always used. This post takes a deep dive into the topic giving a visual explainer and at the same time trying to answer questions like: why do we run the model twice? is it just temperature tuning? and when should we not use it?
 
-![CFG Trajectory Curvature](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/cfg/visualizations/cfg_vector_field.gif?raw=true)
+![CFG Trajectory Curvature](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/visualizations/cfg_vector_field.gif?raw=true)  
 
 # Background
 
@@ -23,6 +23,8 @@ Both diffusion models and flow matching can be interpreted as utilizing the Lang
 $$x_{t+1} = x_t + \alpha_t \nabla_x \log p(x_t) + \mathcal{N}(0, \epsilon_t^2)$$
 
 where $x_t$ is the sample at time $t$, $\nabla_x \log p(x_t)$ is the gradient of the log-likelihood of the target distribution, $\alpha_t$ is the step size, and $\mathcal{N}(0, \epsilon_t^2)$ is the noise added to the sample.
+![Unconditional Generation Visualization](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/visualizations/cfg_trajectory_curvature_0.gif?raw=true)
+*Figure 1: Unconditional generation from a Flow Matching model*
 
 While diffusion models learn to predict the score function, i.e. one component of $\nabla_x \log p(x_t)$, flow matching learns to predict the velocity field itself, i.e. $v_t = x_{t+1} - x_{t}$. The diffusion models are learning to denoise the noisy sample, while flow matching learns the linear interpolation between the current sample and the next one. 
 
@@ -30,7 +32,7 @@ For simplicity, we will assume a flow matching model for the rest of the post.
 
 ![Diffusion/Flow Model Visualization](/images/diffusion_flow_visual.svg)
 
-*Figure 1: (a) A single forward pass through the model takes noisy input x_t and timestep t, producing a velocity/score prediction. (b) Iterative sampling follows these velocity predictions step-by-step from noise distribution to data distribution. (c) The model learns a vector field that transports samples from a Gaussian distribution $\mathcal{N}(0, 1)$ to the target distribution $p(\mathbf{x})$*
+*Figure 2: (a) A single forward pass through the model takes noisy input x_t and timestep t, producing a velocity/score prediction. (b) Iterative sampling follows these velocity predictions step-by-step from noise distribution to data distribution. (c) The model learns a vector field that transports samples from a Gaussian distribution $\mathcal{N}(0, 1)$ to the target distribution $p(\mathbf{x})$*
 
 ## Classifier Guided Generation
 A natural design choice is to train the generative model on the entire dataset unconditionally and then use a classifier to guide the sampling process. However, this approach has two major drawbacks: 
@@ -48,7 +50,7 @@ So far, we have only seen the unconditional generation case. Conditioning is the
 
 ![Conditional Generation Visualization](/images/classifier_free_guidance_visual.svg)
 
-*Figure 2: (a) Single forward pass with conditional information c added to the model inputs. The velocity output now depends on both the noisy sample x_t, timestep t, and condition c. (b) Conditional sampling where c = left eye guides the trajectory specifically toward the left eye region of the target distribution.*
+*Figure 3: (a) Single forward pass with conditional information c added to the model inputs. The velocity output now depends on both the noisy sample x_t, timestep t, and condition c. (b) Conditional sampling where c = left eye guides the trajectory specifically toward the left eye region of the target distribution.*
 
 [^dhariwal2021diffusion] also noted that the classifier-guided generation can still be helpful for an conditionally trained model, even outperforming without guidance as well as unconditionally trained models with classifier guidance. The sampling now utilizes: 
 $$\nabla_x \log p_{g}(x_t \mid c) + \lambda \nabla_x \log p_{cls}(c \mid x_t)$$
@@ -68,14 +70,6 @@ $$x = x_{uncond} + \gamma \cdot (x_{cond} - x_{uncond})$$
 
 where $x_{uncond}$ is the generated sample without the class label, and $x_{cond}$ is the generated sample with the class label.
 The guidance scale $\gamma$ is a hyperparameter that controls the strength of the guidance. A higher guidance scale will produce more class-specific samples.
-
-## The Algorithm
-
-The algorithm is as follows:
-
-1. Train a classifier to predict the class of the generated sample.
-2. Use the classifier to guide the sampling process.
-3. Improve the sample quality.
 
 ## The Implementation
 
@@ -98,6 +92,14 @@ def classifier_free_guidance(model: torch.nn.Module, x: torch.Tensor, y: torch.T
     x = x_uncond + cfg_scale * (x_cond - x_uncond)
     return x
 ```
+
+# Visualizations
+
+![CFG Visualization](/images/flow_matching/non_overlapping/5_both_classes_cfg.png)
+*Figure 4: Non overlapping classes: CFG comparison for both classes side by side.*
+
+![CFG Visualization](/images/flow_matching/overlapping/5_both_classes_cfg.png)
+*Figure 5: Overlapping classes: CFG comparison for both classes side by side.*
 
 ## Temperature Tuning
 
