@@ -98,7 +98,7 @@ def classifier_free_guidance(model: torch.nn.Module, x: torch.Tensor, y: torch.T
 ![CFG Visualization](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/visualizations/both_classes_cfg.png?raw=true)
 *Figure 4: Non overlapping classes: CFG comparison for both classes side by side.*
 
-![CFG Visualization](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/visualizations/both_classes_cfg.png?raw=true)
+![CFG Visualization](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/visualizations/both_classes_cfg.png?raw=true)
 *Figure 5: Overlapping classes: CFG comparison for both classes side by side.*
 
 ## Temperature Tuning
