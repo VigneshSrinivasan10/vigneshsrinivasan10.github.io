@@ -20,7 +20,7 @@ Classifier-free guidance is a technique for improving the quality of generated s
 
 Both diffusion models and flow matching can be interpreted as utilizing the Langevin dynamics, specifically the Metropolis-adjusted Langevin algorithm (MALA), to sample from the target distribution. MALA is given by the following equation:
 
-$$x_{t+1} = x_t + \alpha_t \nabla_x \log p(x_t) + \mathcal{N}(0, \epsilon_t^2)$$
+$$x_{t+1} = x_t + \alpha_t \nabla_x \log p(x_t) + \mathcal{N}(0, \epsilon_t^2) \tag{1}$$
 
 where $x_t$ is the sample at time $t$, $\nabla_x \log p(x_t)$ is the gradient of the log-likelihood of the target distribution, $\alpha_t$ is the step size, and $\mathcal{N}(0, \epsilon_t^2)$ is the noise added to the sample.
 ![Unconditional Generation Visualization](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/visualizations/cfg_trajectory_curvature_0.gif?raw=true)
@@ -39,9 +39,9 @@ A natural design choice is to train the generative model on the entire dataset u
 1. The mode-collapse: an unconditionally trained model may not be able to capture the low density regions, areas with fewer training samples, of the target distribution well. 
 2. Gradient issues: guidance takes the form of: 
 
-$$\nabla_x \log p(x_t, c) = \nabla_x \log p_{g}(x_t) + \lambda \nabla_x \log p_{cls}(c \mid x_t)$$
+$$\nabla_x \log p(x_t, c) = \nabla_x \log p(x_t) + \lambda \nabla_x \log p(c \mid x_t)  \tag{2}$$
 
-where $p_{g}(x_{t})$ is the unconditional distribution, $\lambda$ is a hyperparameter that controls the strength of the guidance and $p_{cls}(c \mid x_t)$  is the conditional distribution coming from a classifier.  
+where $p(x_{t})$ is the unconditional distribution, $\lambda$ is a hyperparameter that controls the strength of the guidance and $p(c \mid x_t)$  is the conditional distribution coming from a classifier.  
 
 First, the classifier should have learned a good representation of the condition such that the gradient of the conditional distribution is usable for the sampling process. Second, the difficulty lies combining the gradients effectively by tuning $\lambda$ during inference [^dhariwal2021diffusion].
 
@@ -53,7 +53,10 @@ So far, we have only seen the unconditional generation case. Conditioning is the
 *Figure 3: (a) Single forward pass with conditional information c added to the model inputs. The velocity output now depends on both the noisy sample x_t, timestep t, and condition c. (b) Conditional sampling where c = left eye guides the trajectory specifically toward the left eye region of the target distribution.*
 
 [^dhariwal2021diffusion] also noted that the classifier-guided generation can still be helpful for an conditionally trained model, even outperforming without guidance as well as unconditionally trained models with classifier guidance. The sampling now utilizes: 
-$$\nabla_x \log p_{g}(x_t \mid c) + \lambda \nabla_x \log p_{cls}(c \mid x_t)$$
+
+$$\nabla_x \log p(x_t \mid c) + \lambda \nabla_x \log p(c \mid x_t)$$
+
+where $p(x_t \mid c)$ is the conditional distribution learned by the generative model. 
 
 Though the two terms look similar, it is not well understood why this is exactly beneficial. But the difficulty still remains in combining the gradients effectively by tuning $\lambda$ during inference. This is where classifier-free guidance comes in.
 
@@ -64,32 +67,101 @@ Though the two terms look similar, it is not well understood why this is exactly
 
 # Classifier-Free Guidance
 
-The key insight is to use make the model learn both the conditional and unconditional distributions during training. A neat Bayesian trick proposed in [^ho2021classifierfree], allows to then make the sampling iterations to boost towards the condition:
+The key insight is to make the model learn both the conditional and unconditional distributions during training. 
 
-$$x = x_{uncond} + \gamma \cdot (x_{cond} - x_{uncond})$$
+## Derivation
+This subsection derives the classifier-free guidance formula using the neat Bayesian trick proposed in [^ho2021classifierfree].
 
-where $x_{uncond}$ is the generated sample without the class label, and $x_{cond}$ is the generated sample with the class label.
-The guidance scale $\gamma$ is a hyperparameter that controls the strength of the guidance. A higher guidance scale will produce more class-specific samples.
+$$\log p(x_t | c) + \log p(c) =  \log p(c | x_t) +  \log p(x_t)$$ 
 
-## The Implementation
+$p(c)$ term moved to the right side of the equation
 
-The code for the classifier-free guidance is as follows:
+$$\log p(x_t | c) =  \log p(c | x_t) +  \log p(x_t) -  \log p(c)$$ 
 
+Taking the gradient with respect to $x_t$:
+
+$$\nabla_{x_t} \log p(x_t | c) = \nabla_{x_t} \log p(c | x_t) + \nabla_{x_t} \log p(x_t) $$  
+
+Moving $p(x_t)$ term to the left side of the equation:
+
+$$\nabla_{x_t} \log p(x_t | c) - \nabla_{x_t} \log p(x_t) = \nabla_{x_t} \log p(c | x_t) \tag{3}$$
+
+The right hand side of equation (3) is the gradient of the conditional distribution of the class label given the sample learned through a classifier in equation (2). Plugging left hand side of equation (3) into equation (2) gives: 
+
+$$\nabla_x \log p(x_t, c) = \nabla_x \log p(x_t) + \lambda (\nabla_{x_t} \log p(x_t | c) - \nabla_{x_t} \log p(x_t)) \tag{4}$$
+
+Remember that our flow matching model predicts the velocity field:
+$$v_{t} \propto \nabla_{x_t} \log p(x_t)$$. 
+
+So we can rewrite equation (4) as:
+
+$$v_{cfg} = v_{u} + \lambda (v_{c} - v_{u})$$
+
+where $v_{u}$ is the unconditional velocity, and $v_{c}$ is the conditional velocity.
+The guidance scale $\lambda$ is a hyperparameter that controls the strength of the guidance. A higher guidance scale will produce more class-specific samples.
+
+We have now rid ourselves of having to use an external classifier. However the question still remains: how do we get both the unconditional and conditional velocity fields?
+The anwer is to make the same model learn both the unconditional $v_u$ and conditional $v_c$ velocity fields during training. 
+The model is fed with the class labels to learn the conditional velocity field and a null label to learn the unconditional velocity field.
+
+
+## Implementation
+
+The training function is as follows:
 ```python
-def classifier_free_guidance(model: torch.nn.Module, x: torch.Tensor, y: torch.Tensor, cfg_scale: float = 2.0) -> torch.Tensor:
+def train_step(model: torch.nn.Module, 
+          x: torch.Tensor, 
+          labels: torch.Tensor, 
+          t: torch.Tensor,
+          v_target: torch.Tensor,
+          null_label: torch.Tensor = torch.tensor(-1.0), 
+          label_dropout: float = 0.2) -> torch.Tensor:
+    """
+    Args:
+        model: The model to use for training.
+        x: The input tensor.
+        y: The class tensor.
+        v_target: The target velocity tensor.
+        null_label: The null label used during training.
+        label_dropout: The probability of dropping the label.
+    """
+    dropout_mask = np.random.rand(x.shape[0]) < label_dropout
+    labels[dropout_mask] = null_label # randomly set labels to -1 (unconditional)
+    
+    t = np.random.rand(x.shape[0], 1) # Sample random time t ∈ [0, 1]
+    x0 = np.random.randn(x.shape[0], 2) # Sample noise
+    x_t = (1 - t) * x0 + t * x # Straight-line interpolation  
+    v_target = x - x0 # Target velocity
+    v_pred = model(x_t, t, labels) # Forward pass
+    loss = np.mean((v_pred - v_target) ** 2) # Compute MSE loss
+    return loss
+```
+
+Once trained, the model can be used to generate samples conditionally as well as unconditionally.
+The inference function which then utilizes the classifier-free guidance formula is as follows:
+```python
+def inference_step(model: torch.nn.Module, 
+                            x: torch.Tensor, 
+                            labels: torch.Tensor, 
+                            t: torch.Tensor,
+                            null_label: torch.Tensor = torch.tensor(-1.0), 
+                            cfg_scale: float = 2.0) -> torch.Tensor:
     """
     Args:
         model: The model to use for generation.
         x: The input tensor.
-        y: The class tensor.
+        labels: The class tensor.
+        t: The time tensor.
+        null_label: The null label used during training.
         cfg_scale: The guidance scale.
 
     Returns:
         The guided sample.
     """
-    x_uncond = model(x, torch.tensor(-1.0))
-    x_cond = model(x, y)
-    x = x_uncond + cfg_scale * (x_cond - x_uncond)
+    v_u = model(x, t, null_label) # Unconditional velocity
+    v_c = model(x, t, labels) # Conditional velocity
+    v = v_u + cfg_scale * (v_c - v_u) # CFG
+    x = x + v * dt # Euler step
     return x
 ```
 
@@ -103,9 +175,9 @@ def classifier_free_guidance(model: torch.nn.Module, x: torch.Tensor, y: torch.T
 
 
 ![CFG Visualization](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/visualizations/probability_path.gif?raw=true)
-
+*Figure 6: Non overlapping classes: Probability path for both classes side by side.*
 ![CFG Visualization](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/visualizations/probability_path.gif?raw=true)
-
+*Figure 7: Overlapping classes: Probability path for both classes side by side.*
 
 ## Temperature Tuning
 
