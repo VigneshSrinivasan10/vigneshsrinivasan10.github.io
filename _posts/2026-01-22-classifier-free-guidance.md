@@ -186,6 +186,15 @@ Is classifier-free guidance a form of temperature tuning? The answer is yes and 
 Yes, because the guidance scale $\text{cfg_scale}$ > $1.0$ can be interpreted as a way to reduce the temperature of the sampling process.
 No, because the outcome is a condensation of the distribution towards the class label. It is not a simple temperature reduction. Decreasing the $\text{cfg_scale}$ will not always result in a sharper distribution. In fact, it will result in a more blurred distribution.
 
+# Rectified Flow vs Classifier-Free Guidance 
+
+Rectified flow is another staple in the generative model toolkit. It is a way to straighten the trajectory of the sampling process, thereby achieving better sampling quality in fewer steps. 
+
+![Rectified Flow](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/visualizations/rectified_flow_trajectory_curvature.gif?raw=true)
+*Figure 8: Rectified flow trajectory curvature.*
+
+This elegant solution is at odds with the classifier-free guidance. 
+
 ## References
 
 [^dhariwal2021diffusion]: Dhariwal, Prafulla, and Alexander Nichol. "Diffusion models beat gans on image synthesis." In *Advances in Neural Information Processing Systems* 34 (2021): 8780-8794.
