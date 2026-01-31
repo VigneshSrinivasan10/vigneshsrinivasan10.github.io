@@ -74,6 +74,10 @@ This subsection derives the classifier-free guidance formula using the neat Baye
 
 $$\log p(x_t | c) + \log p(c) =  \log p(c | x_t) +  \log p(x_t)$$ 
 
+![CFG Vectors](/images/cfg_vectors.svg)
+
+*Figure: The CFG vector is computed by combining the unconditional and conditional velocity predictions. The guidance scale $\gamma$ controls how much the trajectory is pushed toward the conditional direction.*
+
 $p(c)$ term moved to the right side of the equation
 
 $$\log p(x_t | c) =  \log p(c | x_t) +  \log p(x_t) -  \log p(c)$$ 
