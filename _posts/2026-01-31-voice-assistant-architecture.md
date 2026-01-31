@@ -78,6 +78,8 @@ The speech pipeline uses a two-stage approach:
 
 **Whisper small.en** (via fastrtc_whisper_cpp) handles transcription. The English-only small model provides a good balance of accuracy and speed for edge deployment. The whisper.cpp backend enables efficient CPU inference.
 
+**STT is the main bottleneck** in this pipeline. It's the primary interface to the human - the user is waiting for their speech to be understood before anything else can happen. Everything downstream (routing, LLM inference, TTS) is automation that processes in sequence. Optimizing STT latency has the most direct impact on perceived responsiveness.
+
 ## Router with Handler Registry
 
 The router implements a **handler registry pattern** where specialized handlers are registered with priority values:
