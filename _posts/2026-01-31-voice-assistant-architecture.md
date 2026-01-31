@@ -43,8 +43,9 @@ flowchart LR
     end
 
     subgraph "Intent Routing"
-        D[Router]
+        D[Router<br/>Rule-based]
         E[Weather Handler<br/>priority: 10]
+        S[Spotify Handler<br/>priority: 20]
         F[LLM Fallback<br/>Mistral 7B Q4_K_M]
         G[Conversation<br/>Memory]
     end
@@ -54,8 +55,14 @@ flowchart LR
         I[🔊 Speaker]
     end
 
+    subgraph "External Services"
+        SP[Spotify API]
+    end
+
     A --> B --> C --> D
     D --> E --> H
+    D --> S --> SP
+    S --> H
     D --> F --> H
     F <--> G
     H --> I
@@ -82,12 +89,14 @@ The speech pipeline uses a two-stage approach:
 
 ## Router with Handler Registry
 
-The router implements a **handler registry pattern** where specialized handlers are registered with priority values:
+The router implements a **simple rule-based handler registry pattern**. Each handler registers with a priority value and a matching function (typically keyword-based):
 
 ```
-Router
+Router (Rule-based)
   ├── WeatherHandler (priority: 10)
-  │     └── Matches: weather queries
+  │     └── Matches: "weather", "temperature", "forecast"
+  ├── SpotifyHandler (priority: 20)
+  │     └── Matches: "play", "pause", "skip", "music"
   └── LLM Fallback (priority: lowest)
         └── Handles: everything else
 ```
@@ -95,9 +104,13 @@ Router
 Handlers are checked in priority order. The first matching handler processes the request. If no handler matches, the query falls through to the LLM.
 
 This design allows:
-- Fast responses for common queries (weather, time, etc.)
+- Fast responses for common queries (weather, music control, etc.)
 - Easy extension with new handlers
 - LLM as a catch-all for open-ended conversation
+
+**Why rule-based?** On edge devices with limited compute, a simple keyword matcher is nearly instantaneous. It handles the common cases (80% of queries) without invoking the LLM.
+
+**Alternative: LLM as router.** With more compute budget, you could use a smaller LLM (or the same LLM with a routing prompt) to classify intent. This provides better understanding of ambiguous queries but adds latency. For cloud deployments or beefier edge hardware, this trade-off may be worthwhile.
 
 ## LLM (Mistral 7B)
 
