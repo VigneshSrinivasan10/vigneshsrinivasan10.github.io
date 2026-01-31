@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <defs>
+    <!-- Arrow markers for each vector type -->
+    <marker id="arrowUncond" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+    </marker>
+    <marker id="arrowCond" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrowCfg" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e"/>
+    </marker>
+  </defs>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .v-uncond {
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out 0.5s forwards;
+    }
+    .v-cond {
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out 1.5s forwards;
+    }
+    .v-cfg {
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out 2.5s forwards;
+    }
+  </style>
+
+  <!-- Starting point x_t (always visible) -->
+  <circle cx="60" cy="100" r="6" fill="#333"/>
+  <text x="60" y="130" font-family="Arial, sans-serif" font-size="14" fill="#333" text-anchor="middle">x</text>
+  <text x="70" y="134" font-family="Arial, sans-serif" font-size="10" fill="#333">t</text>
+
+  <!-- v_uncond arrow (bottom) - appears first -->
+  <g class="v-uncond">
+    <line x1="66" y1="100" x2="180" y2="150" stroke="#6b7280" stroke-width="2.5" marker-end="url(#arrowUncond)"/>
+    <text x="200" y="160" font-family="Arial, sans-serif" font-size="13" fill="#6b7280">v</text>
+    <text x="212" y="164" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">uncond</text>
+  </g>
+
+  <!-- v_cond arrow (center) - appears second -->
+  <g class="v-cond">
+    <line x1="66" y1="100" x2="220" y2="100" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrowCond)"/>
+    <text x="240" y="105" font-family="Arial, sans-serif" font-size="13" fill="#3b82f6">v</text>
+    <text x="252" y="109" font-family="Arial, sans-serif" font-size="10" fill="#3b82f6">cond</text>
+  </g>
+
+  <!-- v_cfg arrow (top) - appears last -->
+  <g class="v-cfg">
+    <line x1="66" y1="100" x2="280" y2="50" stroke="#22c55e" stroke-width="2.5" marker-end="url(#arrowCfg)"/>
+    <text x="300" y="55" font-family="Arial, sans-serif" font-size="13" fill="#22c55e">v</text>
+    <text x="312" y="59" font-family="Arial, sans-serif" font-size="10" fill="#22c55e">cfg</text>
+  </g>
+
+  <!-- Legend (always visible) -->
+  <text x="350" y="180" font-family="Arial, sans-serif" font-size="10" fill="#999" text-anchor="end">CFG: v = v_uncond + w(v_cond - v_uncond)</text>
+</svg>

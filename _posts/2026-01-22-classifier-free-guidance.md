@@ -71,6 +71,10 @@ $$x = x_{uncond} + \gamma \cdot (x_{cond} - x_{uncond})$$
 where $x_{uncond}$ is the generated sample without the class label, and $x_{cond}$ is the generated sample with the class label.
 The guidance scale $\gamma$ is a hyperparameter that controls the strength of the guidance. A higher guidance scale will produce more class-specific samples.
 
+![CFG Vectors](/images/cfg_vectors.svg)
+
+*Figure: The CFG vector is computed by combining the unconditional and conditional velocity predictions. The guidance scale $\gamma$ controls how much the trajectory is pushed toward the conditional direction.*
+
 ## The Implementation
 
 The code for the classifier-free guidance is as follows:
