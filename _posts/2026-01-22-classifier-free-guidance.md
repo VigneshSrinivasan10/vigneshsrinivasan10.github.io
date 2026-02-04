@@ -190,14 +190,42 @@ Is classifier-free guidance a form of temperature tuning? The answer is yes and 
 Yes, because the guidance scale $\text{cfg_scale}$ > $1.0$ can be interpreted as a way to reduce the temperature of the sampling process.
 No, because the outcome is a condensation of the distribution towards the class label. It is not a simple temperature reduction. Decreasing the $\text{cfg_scale}$ will not always result in a sharper distribution. In fact, it will result in a more blurred distribution.
 
-# Rectified Flow vs Classifier-Free Guidance 
+# Rectified Flow vs Classifier-Free Guidance
 
-Rectified flow is another staple in the generative model toolkit. It is a way to straighten the trajectory of the sampling process, thereby achieving better sampling quality in fewer steps. 
+Rectified flow is another staple in the generative model toolkit. It is a way to straighten the trajectory of the sampling process, thereby achieving better sampling quality in fewer steps.
 
 ![Rectified Flow](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/visualizations/rectified_flow_trajectory_curvature.gif?raw=true)
 *Figure 8: Rectified flow trajectory curvature.*
 
-This elegant solution is at odds with the classifier-free guidance. 
+This elegant solution is at odds with the classifier-free guidance.
+
+## Rectified CFG
+
+### Non-overlapping Classes
+
+![Rectified CFG Trajectory](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/visualizations/rectified_cfg_trajectory.gif?raw=true)
+
+![Rectified CFG Probability Path](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/visualizations/rectified_cfg_probability_path_rect.gif?raw=true)
+
+### Overlapping Classes
+
+![Rectified CFG Trajectory](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/visualizations/rectified_cfg_trajectory.gif?raw=true)
+
+![Rectified CFG Probability Path](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/visualizations/rectified_cfg_probability_path_rect.gif?raw=true)
+
+## Distillation Guidance
+
+### Non-overlapping Classes
+
+![Distillation Guidance Trajectory](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/distilled/visualizations/trajectory_guidance_scales.gif?raw=true)
+
+![Distillation Guidance Probability Path](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/distilled/visualizations/probability_path_guidance_scales.gif?raw=true)
+
+### Overlapping Classes
+
+![Distillation Guidance Trajectory](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/distilled/visualizations/trajectory_guidance_scales.gif?raw=true)
+
+![Distillation Guidance Probability Path](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/distilled/visualizations/probability_path_guidance_scales.gif?raw=true)
 
 ## References
 
