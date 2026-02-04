@@ -217,15 +217,15 @@ This elegant solution is at odds with the classifier-free guidance.
 
 ### Non-overlapping Classes
 
-![Distillation Guidance Trajectory](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/distillation/outputs/flow_gaussians/non_overlapping/distilled/visualizations/trajectory_guidance_scales.gif?raw=true)
+![Distillation Guidance Trajectory](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/flow_gaussians/non_overlapping/distilled/visualizations/trajectory_guidance_scales.gif?raw=true)
 
-![Distillation Guidance Probability Path](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/distillation/outputs/flow_gaussians/non_overlapping/distilled/visualizations/probability_path_guidance_scales.gif?raw=true)
+![Distillation Guidance Probability Path](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/flow_gaussians/non_overlapping/distilled/visualizations/probability_path_guidance_scales.gif?raw=true)
 
 ### Overlapping Classes
 
-![Distillation Guidance Trajectory](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/distillation/outputs/flow_gaussians/overlapping/distilled/visualizations/trajectory_guidance_scales.gif?raw=true)
+![Distillation Guidance Trajectory](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/flow_gaussians/overlapping/distilled/visualizations/trajectory_guidance_scales.gif?raw=true)
 
-![Distillation Guidance Probability Path](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/distillation/outputs/flow_gaussians/overlapping/distilled/visualizations/probability_path_guidance_scales.gif?raw=true)
+![Distillation Guidance Probability Path](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/flow_gaussians/overlapping/distilled/visualizations/probability_path_guidance_scales.gif?raw=true)
 
 ## References
 
