@@ -111,13 +111,7 @@ PaLM-E is an embodied multimodal LLM that processes text + vision + continuous s
 - Learns jointly from text, images, and sensor data.
 - Used for manipulation, navigation, and visual reasoning.
 
-```mermaid
-flowchart LR
-    Vision -->|features| Model[PaLM E]
-    Text -->|instructions| Model
-    Sensors -->|state| Model
-    Model --> Actions
-```
+![PaLM-E Architecture](https://palm-e.github.io/img/approach.png)
 
 *Significance: Bridges perception, reasoning, and control.*
 
@@ -132,9 +126,48 @@ Voyager is an open-ended agent in Minecraft powered by GPT-4:
 
 *Key Concept: LLM-guided exploration + memory → autonomous long-horizon behavior.*
 
+## Vision-Language-Action Models (VLAs)
+
+A recent breakthrough in robotics is the **Vision-Language-Action (VLA)** paradigm, which directly outputs continuous robot actions from an LLM backbone. The key insight is to have an action expert that outputs continuous action distributions rather than discrete tokens.
+
+```mermaid
+block-beta
+    columns 3
+    
+    block:model:2
+        LLM["LLM Backbone"]
+    end
+    AE["Action Expert"]
+    
+    IE["Image Encoder"]
+    LI["Language Instruction"]
+    OUT["a ~ π(a|s)"]
+    
+    IE --> LLM
+    LI --> LLM
+    LLM --> AE
+    AE --> OUT
+```
+
+*VLA architecture: An LLM backbone processes image encodings and language instructions, with an Action Expert head that outputs continuous action distributions.*
+
+**Key papers in this space**:
+
+- **OpenVLA** ([Kim et al., 2024](https://openvla.github.io/)): Open-source 7B parameter VLA trained on 970k robot trajectories from the Open X-Embodiment dataset. Fine-tunable for specific robots.
+- **π₀ (pi-zero)** ([Black et al., 2024](https://www.physicalintelligence.company/blog/pi0)): A flow-matching based VLA from Physical Intelligence that achieves state-of-the-art performance on dexterous manipulation tasks.
+
+**Architecture insights**:
+- **LLM Backbone**: Pretrained vision-language model (e.g., Llama, PaliGemma) provides reasoning and world knowledge
+- **Action Expert**: Specialized head that outputs action distributions rather than discrete tokens
+- **Flow Matching**: Some VLAs use flow matching to model continuous action distributions, avoiding discretization artifacts
+
+**Why this matters**: VLAs bridge the gap between high-level language understanding and low-level motor control, enabling robots to follow natural language instructions while handling the continuous nature of physical actions.
+
 # Limitations: Next-Token Prediction Failures
 
 While LLMs show impressive capabilities, recent work by [Bachmann et al. (2024)](https://arxiv.org/abs/2403.06963) reveals fundamental limitations of next-token prediction for sequential decision making tasks.
+
+
 
 ![Next-Token Failures](https://github.com/gregorbachmann/Next-Token-Failures/blob/main/imgs/cleverhans.png?raw=true)
 *Path-finding tasks expose limitations: LLMs trained with next-token prediction resort to uniform guessing rather than genuine planning—a "Clever Hans" effect where models appear capable but lack true reasoning.*
