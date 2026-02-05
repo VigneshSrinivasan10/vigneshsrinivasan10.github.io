@@ -5,6 +5,7 @@ date: 2025-04-15
 categories: [machine-learning, deep-learning]
 tags: [scaling, training, neural-networks, optimization]
 math: true
+wip: true
 excerpt: "An overview of scaling recipes and best practices for training large neural networks efficiently."
 ---
 

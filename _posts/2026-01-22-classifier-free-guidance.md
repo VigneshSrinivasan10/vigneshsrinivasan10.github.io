@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Classifier-Free Guidance [WIP]"
+title: "Classifier-Free Guidance"
 date: 2026-01-22
-#categories: [machine-learning, generative-models, diffusion-models, flow-matching]
 tags: [classifier-free-guidance, sampling, generative-models, diffusion-models, flow-matching]
 math: true
+wip: true
 excerpt: "An overview of classifier-free guidance for generative models."
 ---
 

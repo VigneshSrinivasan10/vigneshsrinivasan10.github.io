@@ -5,6 +5,7 @@ date: 2025-01-15
 categories: [machine-learning, generative-models]
 tags: [flow-matching, diffusion, deep-learning]
 math: true
+wip: true
 excerpt: "A deep dive into flow matching, a simpler alternative to diffusion models for learning continuous normalizing flows."
 ---
 

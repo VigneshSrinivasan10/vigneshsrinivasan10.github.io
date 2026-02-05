@@ -5,6 +5,7 @@ date: 2025-01-10
 categories: [machine-learning, sampling]
 tags: [langevin, mcmc, sampling, stochastic-processes]
 math: true
+wip: true
 excerpt: "How Langevin dynamics can be used to sample from complex distributions, and the relationship between step size and effective temperature."
 ---
 

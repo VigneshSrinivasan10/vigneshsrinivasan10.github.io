@@ -4,6 +4,7 @@ title: "LLMs for Sequential Decision Making"
 date: 2026-02-05
 tags: [llm, reinforcement-learning, decision-making, planning, robotics, agents]
 math: true
+wip: true
 excerpt: "How Large Language Models are being used to reason, plan, and act over time in sequential decision-making tasks."
 ---
 

@@ -7,9 +7,13 @@ permalink: /blog/
 <h1>Blogs</h1>
 
 <div class="blog-index">
-{% if site.posts.size > 0 %}
+
+{% assign published_posts = site.posts | where_exp: "post", "post.wip != true" %}
+{% assign wip_posts = site.posts | where: "wip", true %}
+
+{% if published_posts.size > 0 %}
     <ul class="post-list">
-    {% for post in site.posts %}
+    {% for post in published_posts %}
         <li>
             <article class="post-preview">
                 <h2>
@@ -33,7 +37,38 @@ permalink: /blog/
     {% endfor %}
     </ul>
 {% else %}
-    <p>No posts yet. Check back soon!</p>
+    <p>No published posts yet. Check back soon!</p>
 {% endif %}
-</div>
 
+{% if wip_posts.size > 0 %}
+<h2 class="wip-section-title">Work in Progress</h2>
+<p class="wip-description">These posts are still being written. Content may change.</p>
+
+<ul class="post-list wip-list">
+{% for post in wip_posts %}
+    <li>
+        <article class="post-preview wip">
+            <h2>
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                <span class="wip-badge">WIP</span>
+            </h2>
+            <time datetime="{{ post.date | date_to_xmlschema }}">
+                {{ post.date | date: "%B %d, %Y" }}
+            </time>
+            {% if post.tags.size > 0 %}
+                <div class="post-tags">
+                    {% for tag in post.tags %}
+                        <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if post.excerpt %}
+                <p>{{ post.excerpt | strip_html | truncate: 300 }}</p>
+            {% endif %}
+        </article>
+    </li>
+{% endfor %}
+</ul>
+{% endif %}
+
+</div>

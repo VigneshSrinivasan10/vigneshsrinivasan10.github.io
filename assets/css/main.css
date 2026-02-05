@@ -234,6 +234,44 @@
     font-size: 1.1em !important;
 }
 
+/* WIP Section */
+.wip-section-title {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px dashed #ccc;
+    color: #666;
+}
+
+.wip-description {
+    color: #888;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+}
+
+.wip-list {
+    opacity: 0.9;
+}
+
+.post-preview.wip {
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 3px solid #aaa;
+}
+
+.wip-badge {
+    display: inline-block;
+    background: #e9ecef;
+    color: #666;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
     .nav-container {

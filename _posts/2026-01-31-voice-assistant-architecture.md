@@ -3,6 +3,7 @@ layout: post
 title: "Building a Local Voice Assistant for Edge Devices"
 date: 2026-01-31
 tags: [voice-assistant, edge-computing, llm, speech-recognition, tts, local-ai]
+wip: true
 excerpt: "A fully local voice assistant architecture running on CPU-only edge devices with VAD, STT, LLM routing, and TTS."
 ---
 
