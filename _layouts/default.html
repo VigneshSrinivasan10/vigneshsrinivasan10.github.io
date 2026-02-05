@@ -32,8 +32,46 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 
     <!-- Mermaid for diagrams -->
+    <style>
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            margin: 1.5em auto;
+            width: 100%;
+        }
+        .mermaid svg {
+            max-width: 100%;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find all code blocks with language-mermaid class
+            document.querySelectorAll('pre code.language-mermaid, code.language-mermaid').forEach(function(codeBlock) {
+                // Get the mermaid code
+                var code = codeBlock.textContent;
+                
+                // Create a new div for mermaid
+                var div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = code;
+                
+                // Replace the pre element (or code if no pre parent)
+                var pre = codeBlock.closest('pre') || codeBlock;
+                pre.parentNode.replaceChild(div, pre);
+            });
+            
+            // Now render all mermaid diagrams
+            mermaid.run();
+        });
+    </script>
 </head>
 <body>
     {% include header.html %}
