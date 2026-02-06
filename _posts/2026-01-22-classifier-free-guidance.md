@@ -190,6 +190,12 @@ Is classifier-free guidance a form of temperature tuning? The answer is yes and 
 Yes, because the guidance scale $\text{cfg_scale}$ > $1.0$ can be interpreted as a way to reduce the temperature of the sampling process.
 No, because the outcome is a condensation of the distribution towards the class label. It is not a simple temperature reduction. Decreasing the $\text{cfg_scale}$ will not always result in a sharper distribution. In fact, it will result in a more blurred distribution.
 
+![Temperature Scaling Non-Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/temperature-scaling/outputs/flow_gaussians/non_overlapping/temperature_scaling/temperature_comparison.png?raw=true)
+*Figure: Temperature scaling for non-overlapping classes.*
+
+![Temperature Scaling Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/temperature-scaling/outputs/flow_gaussians/overlapping/temperature_scaling/temperature_comparison.png?raw=true)
+*Figure: Temperature scaling for overlapping classes.*
+
 # Rectified Flow vs Classifier-Free Guidance
 
 Rectified flow is another staple in the generative model toolkit. It is a way to straighten the trajectory of the sampling process, thereby achieving better sampling quality in fewer steps.
