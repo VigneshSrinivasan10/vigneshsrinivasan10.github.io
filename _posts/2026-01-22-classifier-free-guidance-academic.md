@@ -25,8 +25,12 @@ This work presents a comprehensive analysis of classifier-free guidance, address
 4. **Interactions:** How does CFG interact with rectified flows and few-step sampling?
 5. **Alternatives:** What other guidance mechanisms exist, and when might they be preferable?
 
+To provide immediate visual intuition for the CFG mechanism, consider the animated vector field depicted below. The reader should observe how the velocity vectors—which determine the direction of sample evolution—are systematically modified by the guidance signal. Pay particular attention to how the field magnitude and orientation change as the conditioning influence is introduced.
+
 ![CFG Trajectory Curvature](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/visualizations/cfg_vector_field.gif?raw=true)
 *Figure 1: Visualization of the CFG-modified vector field. The guidance mechanism appears to steer sampling trajectories toward regions of high conditional density. Animation depicts the evolution of the guided velocity field across timesteps.*
+
+As Figure 1 illustrates, the CFG-modified vector field exhibits a clear directional bias toward conditional modes, with velocity magnitudes increasing in regions corresponding to high conditional probability. The temporal evolution reveals how guidance progressively reshapes the transport dynamics—early timesteps show modest perturbations, while later stages exhibit pronounced steering effects. This visualization foreshadows the mathematical formalism developed in Section 3, where the guided velocity is shown to be a weighted combination of conditional and unconditional components.
 
 ---
 
@@ -44,8 +48,12 @@ where $x_t$ denotes the sample at iteration $t$, $\nabla_x \log p(x_t)$ represen
 
 **Assumption 2.1 (Smoothness).** *It is assumed throughout that $\log p(x)$ is differentiable almost everywhere and that $\nabla_x \log p(x)$ is Lipschitz continuous.*
 
+Before introducing conditioning mechanisms, it is instructive to visualize the baseline behavior of unconditional flow matching. The animation below depicts sample trajectories as they evolve from the prior distribution toward the data manifold. The reader should observe the characteristic curvature of these paths, which arises from the non-linearity of the learned velocity field.
+
 ![Unconditional Generation Visualization](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/visualizations/cfg_trajectory_curvature_0.gif?raw=true)
 *Figure 2: Unconditional generation via flow matching. Trajectories originate from a standard Gaussian prior $\mathcal{N}(0, I)$ and evolve toward the learned data distribution. The curvature of trajectories reflects the non-linearity of the learned velocity field.*
+
+As evidenced by Figure 2, unconditional flow matching produces smooth but curved trajectories that converge toward different modes of the data distribution depending on their initialization. The curvature of these paths has important implications for numerical integration: highly curved trajectories require smaller step sizes for accurate simulation, a consideration that becomes especially relevant when CFG introduces additional curvature (see Section 8). This baseline visualization establishes the geometric foundation against which guided trajectories can be compared.
 
 ### 2.2 Diffusion Models versus Flow Matching
 
@@ -57,9 +65,13 @@ While both paradigms learn to transport samples from a prior distribution to the
 
 For notational simplicity, the subsequent analysis adopts the flow matching formulation. However, the theoretical results generalize to diffusion models under appropriate reparameterization.
 
+The schematic diagram below provides a high-level overview of the flow matching framework. The reader should note the three key components: (a) the neural network architecture that maps noisy inputs to velocity predictions, (b) the iterative sampling procedure that integrates these velocities, and (c) the induced transport from prior to data distribution.
+
 ![Diffusion/Flow Model Visualization](/images/diffusion_flow_visual.svg)
 
 *Figure 3: Schematic representation of flow-based generative modeling. (a) A single forward pass: given noisy input $x_t$ and timestep $t$, the model produces a velocity prediction $v_\theta(x_t, t)$. (b) Iterative sampling: trajectories follow predicted velocities from the prior distribution to the data distribution. (c) The learned vector field induces a transport map from $\mathcal{N}(0, I)$ to the target distribution $p(x)$.*
+
+Figure 3 encapsulates the essential mechanism of flow-based generation: the model learns a time-varying velocity field that, when integrated, transports samples from a simple prior to the complex data distribution. Panel (a) emphasizes that each forward pass produces a local velocity estimate, while panel (b) shows how these estimates are chained together through numerical integration. The transport map in panel (c) illustrates the global effect—a deterministic mapping from prior samples to data samples. This architecture forms the foundation upon which conditional guidance mechanisms are built.
 
 ### 2.3 Classifier-Guided Generation
 
@@ -93,9 +105,13 @@ $$v_\theta(x_t, t, c) \approx \mathbb{E}[v_t | x_t, c]$$
 
 where the expectation is taken over the conditional flow.
 
+The diagram below contrasts unconditional and conditional generation architectures. The reader should note how the conditioning signal $c$ enters the network as an additional input, fundamentally altering the velocity predictions and resulting trajectory distributions.
+
 ![Conditional Generation Visualization](/images/classifier_free_guidance_visual.svg)
 
 *Figure 4: Conditional generation with explicit conditioning. (a) The forward pass incorporates conditioning signal $c$ as an additional input. (b) Conditional sampling: with $c = \text{left eye}$, trajectories are steered toward the corresponding region of the data manifold.*
+
+As illustrated in Figure 4, explicit conditioning modifies both the model architecture and the resulting sample distribution. Panel (a) shows the conditioning signal being injected into the network, typically through cross-attention, concatenation, or adaptive normalization layers. Panel (b) demonstrates the practical effect: trajectories initialized from the same prior region can be steered toward entirely different data modes depending on the conditioning signal. This capability forms the basis of controllable generation, though as subsequent sections demonstrate, the raw conditional model often benefits from additional guidance amplification.
 
 Dhariwal and Nichol [^dhariwal2021diffusion] observed that classifier guidance can augment even conditionally trained models:
 
@@ -135,9 +151,13 @@ $$\nabla_{x_t} \log p(c | x_t) = \nabla_{x_t} \log p(x_t | c) - \nabla_{x_t} \lo
 
 **Key Insight:** Equation (5) reveals that the classifier gradient can be computed as the *difference* between conditional and unconditional scores—no external classifier is needed.
 
+The geometric interpretation of Equation (5) is illuminated by the vector diagram below. The reader should observe how the CFG velocity emerges as a linear combination of two model outputs, with the guidance scale $\gamma$ controlling the relative weighting. The direction of the "implicit classifier" corresponds to the vector difference between conditional and unconditional predictions.
+
 ![CFG Vectors](/images/cfg_vectors.svg)
 
 *Figure 5: Geometric interpretation of classifier-free guidance. The CFG velocity vector is computed as a weighted combination of conditional and unconditional predictions. The guidance scale $\gamma$ modulates the magnitude of the conditional correction term.*
+
+Figure 5 provides crucial geometric intuition for the CFG mechanism. The unconditional velocity $v_{\text{uncond}}$ points toward the unconditional data distribution, while the conditional velocity $v_{\text{cond}}$ points toward the conditional mode. Their difference—the implicit classifier direction—indicates how to modify the trajectory to increase conditioning fidelity. By scaling this difference with $\gamma > 1$, CFG amplifies the conditional signal beyond what the base model provides. This vector arithmetic interpretation makes clear why CFG requires two forward passes: both endpoints of the guidance vector must be computed explicitly.
 
 Substituting Equation (5) into the classifier guidance formulation (Equation 2):
 
@@ -326,19 +346,35 @@ This approach can improve guidance quality by using a more principled baseline t
 
 The following visualizations examine CFG behavior under two distributional regimes: non-overlapping and overlapping class-conditional distributions.
 
+To illustrate the effect of guidance scale on sample distribution, Figure 6 visualizes CFG applied to a simple two-class Gaussian mixture where the classes are well-separated. The reader should observe how increasing $\gamma$ affects both the concentration and position of sampled points relative to the class-conditional modes.
+
 ![CFG Visualization Non-Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/visualizations/both_classes_cfg.png?raw=true)
 *Figure 6: CFG effects on non-overlapping class distributions. Left: Class 0; Right: Class 1. Increasing guidance scale $\gamma$ concentrates samples around class-conditional modes. The separation between classes facilitates unambiguous guidance.*
+
+As Figure 6 demonstrates, higher guidance scales produce tighter clustering around the conditional means, empirically confirming the theoretical prediction that CFG amplifies the conditional signal. Notably, at $\gamma = 1$ (no guidance), samples exhibit greater variance, while $\gamma > 5$ shows significant mode concentration. This visualization provides intuition for why practitioners often observe "sharper" outputs with increased guidance—the distribution literally contracts toward high-density regions of $p(x|c)$.
+
+A more challenging scenario arises when class distributions overlap substantially. Figure 7 presents the same CFG analysis for overlapping Gaussian components, revealing how guidance behaves in regions of distributional ambiguity.
 
 ![CFG Visualization Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/visualizations/both_classes_cfg.png?raw=true)
 *Figure 7: CFG effects on overlapping class distributions. When class-conditional distributions exhibit significant overlap, guidance may induce artifacts in regions of ambiguous class membership. This suggests potential failure modes in multi-modal or imbalanced data settings.*
 
+Figure 7 reveals an important limitation of CFG: in regions where $p(x|c_0)$ and $p(x|c_1)$ have similar density, the guidance direction becomes ambiguous or may point away from both modes. Compared to the clean separation in Figure 6, the overlapping case shows samples that may be "pushed" into low-density regions as the guidance attempts to maximize class membership. This phenomenon provides intuition for compositional failures observed in practice, where conflicting conditioning signals can produce artifacts rather than coherent outputs.
+
 ### 5.2 Probability Path Evolution
+
+Beyond static snapshots, understanding the temporal dynamics of CFG requires visualizing the probability density evolution. The animation below traces how probability mass is transported from the Gaussian prior toward class-conditional modes under guided sampling. The reader should observe the progressive concentration of density and the smooth deformation of the distribution.
 
 ![Probability Path Non-Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/visualizations/probability_path.gif?raw=true)
 *Figure 8: Evolution of the probability density under CFG for non-overlapping classes. The animation depicts the transport of probability mass from the prior distribution to the class-conditional targets across integration timesteps.*
 
+Figure 8 reveals the elegant transport dynamics of well-behaved CFG: the initially isotropic Gaussian prior smoothly deforms, with probability mass flowing along the velocity field toward distinct class modes. The separation between modes remains clean throughout the integration, and the final distribution concentrates tightly around the conditional targets. This visualization confirms that CFG preserves the topological structure of separated classes while achieving the desired concentration effect.
+
+The situation becomes considerably more intricate when classes overlap. Figure 9 presents the probability path for the overlapping case, where the reader should observe the more complex splitting and merging behavior of probability mass.
+
 ![Probability Path Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/visualizations/probability_path.gif?raw=true)
 *Figure 9: Evolution of the probability density under CFG for overlapping classes. Note the more complex dynamics in regions where class boundaries intersect.*
+
+As Figure 9 demonstrates, overlapping class distributions produce more turbulent probability dynamics. During intermediate timesteps, probability mass in the overlap region experiences competing guidance signals, resulting in complex flow patterns that may temporarily increase density in unexpected regions. The final distribution, while still concentrated around class modes, exhibits artifacts in the boundary region that reflect the fundamental ambiguity of conditioning in areas of distributional overlap.
 
 ### 5.3 Relationship to Temperature Scaling
 
@@ -349,11 +385,19 @@ A natural question is whether CFG is equivalent to temperature scaling of the ou
 - *Temperature scaling uniformly contracts the distribution: $p_T(x) \propto p(x)^{1/T}$*
 - *CFG contracts anisotropically along the direction $(v_{\text{cond}} - v_{\text{uncond}})$, concentrating samples toward conditional modes while potentially expanding in orthogonal directions.*
 
+To empirically validate this distinction, Figures 10 and 11 compare the sample distributions obtained under temperature scaling versus CFG. The reader should observe the fundamentally different geometry of concentration: temperature scaling contracts uniformly around all modes, while CFG selectively concentrates around the specified conditional mode.
+
 ![Temperature Scaling Non-Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/temperature-scaling/outputs/flow_gaussians/non_overlapping/temperature_scaling/temperature_comparison.png?raw=true)
 *Figure 10: Comparison of temperature scaling effects for non-overlapping classes. Unlike CFG, uniform temperature reduction does not preferentially concentrate samples around conditional modes but rather sharpens the entire distribution uniformly.*
 
+Figure 10 makes the geometric distinction concrete: temperature scaling with $T < 1$ contracts the distribution isotropically around all modes simultaneously, whereas CFG with $\gamma > 1$ produces anisotropic concentration specifically toward the conditioned class. This explains why temperature scaling alone cannot achieve the conditional fidelity improvements observed with CFG—it lacks the directional specificity provided by the implicit classifier term.
+
+The distinction becomes even more apparent in the overlapping case. Figure 11 demonstrates that temperature scaling's uniform contraction cannot disambiguate between overlapping classes, while CFG's directional guidance can.
+
 ![Temperature Scaling Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/temperature-scaling/outputs/flow_gaussians/overlapping/temperature_scaling/temperature_comparison.png?raw=true)
 *Figure 11: Temperature scaling comparison for overlapping classes. The distinction between CFG and temperature scaling is more pronounced when class distributions overlap significantly.*
+
+As Figure 11 illustrates, when classes overlap, temperature scaling simply sharpens the combined distribution, potentially concentrating samples in the overlap region rather than toward either class-conditional mode. CFG, by contrast, uses the conditional direction to steer samples away from the overlap and toward the specified class. This comparison provides theoretical grounding for the empirical observation that CFG outperforms simple temperature reduction for conditional generation tasks.
 
 **Key Observation:** While both CFG and temperature scaling reduce sample diversity, they operate through fundamentally different mechanisms. Temperature scaling uniformly contracts the distribution, whereas CFG induces a directed shift toward the conditional mode. Consequently, reducing $\gamma$ below 1 does not produce sharper distributions—rather, it results in samples that interpolate toward the unconditional distribution, potentially increasing diversity at the cost of conditional fidelity.
 
@@ -528,8 +572,12 @@ $$\mathcal{L}_{\text{rect}} = \mathbb{E}_{t, x_0, x_1}\left[ \| v_\theta(x_t, t)
 
 where $(x_0, x_1)$ are coupled samples from the prior and data distributions.
 
+The animation below demonstrates the effect of rectification on trajectory geometry. The reader should compare the curvature of these trajectories with those in Figure 2 (unconditional flow matching), noting the substantially straighter paths that result from the rectification procedure.
+
 ![Rectified Flow](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/visualizations/rectified_flow_trajectory_curvature.gif?raw=true)
 *Figure 12: Trajectory curvature under rectified flow. The straightening procedure reduces trajectory curvature, enabling accurate integration with fewer discretization steps.*
+
+Figure 12 confirms the theoretical promise of rectification: trajectories are visibly straighter than their unrectified counterparts, approximating the geodesic (straight-line) paths between prior samples and data points. This geometric property has immediate practical implications—Euler integration with large step sizes incurs errors proportional to trajectory curvature, so straighter paths enable accurate generation with fewer neural network evaluations. However, as the following sections demonstrate, this hard-won straightness is partially compromised when CFG is applied.
 
 ### 8.2 The Fundamental Tension
 
@@ -563,19 +611,33 @@ High guidance scales amplify the $(v_c - v_u)$ term, which generally has non-zer
 
 #### Non-Overlapping Classes
 
+To quantify the tension between rectification and guidance, the following visualizations apply CFG to rectified flow models. The reader should compare trajectory curvature with the baseline rectified flow in Figure 12, observing how guidance introduces bending into otherwise straight paths.
+
 ![Rectified CFG Trajectory Non-Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/visualizations/rectified_cfg_trajectory.gif?raw=true)
 *Figure 13: Trajectory evolution under rectified CFG for non-overlapping class distributions. Despite rectification of the base models, guidance introduces non-trivial curvature, particularly in the latter stages of sampling where trajectories diverge toward distinct class modes.*
+
+As Figure 13 clearly demonstrates, CFG reintroduces curvature into rectified trajectories. The curvature is most pronounced in the later stages of sampling, where trajectories that were initially traveling in similar directions must diverge toward distinct class modes. This "late bending" effect is geometrically inevitable: straight paths from a shared prior cannot simultaneously reach separated class modes while remaining straight throughout. The practical consequence is that few-step integrators optimized for rectified flows may require additional steps when CFG is applied.
+
+The probability dynamics under rectified CFG reveal additional complexity. Figure 14 shows how probability mass evolves under the combined influence of rectification and guidance.
 
 ![Rectified CFG Probability Path Non-Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/non_overlapping/visualizations/rectified_cfg_probability_path_rect.gif?raw=true)
 *Figure 14: Probability density evolution under rectified CFG (non-overlapping classes). The transport of probability mass exhibits greater complexity than unguided rectified flow.*
 
+Figure 14 reveals that while rectification keeps the overall transport smooth, guidance modifies the local density evolution in ways that deviate from simple straight-line transport. The probability mass experiences both translation (from rectification) and redistribution (from guidance), resulting in dynamics that are more complex than either mechanism alone would produce.
+
 #### Overlapping Classes
+
+The interaction between rectification, guidance, and class overlap produces particularly intricate dynamics. Figures 15 and 16 visualize this challenging scenario, where the reader should observe how competing guidance signals create complex trajectory patterns.
 
 ![Rectified CFG Trajectory Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/visualizations/rectified_cfg_trajectory.gif?raw=true)
 *Figure 15: Trajectory evolution under rectified CFG for overlapping class distributions. The interaction between guidance and class overlap produces particularly complex trajectory dynamics in regions of distributional ambiguity.*
 
+As Figure 15 illustrates, overlapping classes exacerbate the curvature problem. Trajectories originating from the overlap region experience guidance signals that change direction as the sample crosses from one class's dominance region to another. This results in characteristic "S-curves" and other complex path geometries that substantially increase integration error for large step sizes.
+
 ![Rectified CFG Probability Path Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/classifier-free-guidance/outputs/flow_gaussians/overlapping/visualizations/rectified_cfg_probability_path_rect.gif?raw=true)
 *Figure 16: Probability density evolution under rectified CFG (overlapping classes). Note the intricate splitting of probability mass as trajectories navigate between overlapping modes.*
+
+Figure 16 captures the most complex probability dynamics examined in this work. The probability mass must navigate through regions of competing guidance while simultaneously being transported by the rectified base flow. The result is intricate splitting and merging patterns, with density temporarily accumulating in transition regions before resolving to the final class-conditional distributions. These visualizations provide strong evidence for the practical recommendation in Section 8.5: when combining CFG with few-step sampling, guidance scales should be reduced to compensate for the additional trajectory complexity.
 
 ### 8.5 Implications for Few-Step Sampling
 
@@ -628,19 +690,33 @@ The student model $v_\phi$ takes only the conditional input $c$ and produces out
 
 #### Non-Overlapping Classes
 
+To validate the distillation methodology, the following visualizations compare distilled model outputs with explicit CFG. The reader should verify that trajectory shapes and sample distributions closely match those produced by two-pass CFG, confirming successful knowledge transfer.
+
 ![Distillation Guidance Trajectory Non-Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/flow_gaussians/non_overlapping/distilled/visualizations/trajectory_guidance_scales.gif?raw=true)
 *Figure 17: Trajectories from a guidance-distilled model (non-overlapping classes). The distilled model produces CFG-equivalent outputs with a single forward pass. Note the smooth, curved trajectories that directly encode the guidance effect.*
+
+Figure 17 demonstrates successful guidance distillation: the single-pass distilled model produces trajectories that closely match those from explicit two-pass CFG (compare with Figures 6 and 8). The key observation is that the characteristic curvature of CFG trajectories is now "baked into" the distilled model's velocity predictions, eliminating the need for runtime guidance computation. The smooth trajectory shapes confirm that distillation preserves the essential guidance geometry while halving inference cost.
+
+The probability dynamics under distillation are examined in Figure 18. The reader should compare the density evolution with Figure 8 to assess fidelity of the distillation process.
 
 ![Distillation Guidance Probability Path Non-Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/flow_gaussians/non_overlapping/distilled/visualizations/probability_path_guidance_scales.gif?raw=true)
 *Figure 18: Probability path under guidance distillation (non-overlapping classes). The probability transport closely matches the CFG trajectories shown in earlier figures.*
 
+As Figure 18 confirms, the distilled model's probability transport closely replicates explicit CFG dynamics. The initial isotropic prior smoothly deforms and concentrates toward class modes following the same general pattern as Figure 8. Minor differences may arise from distillation approximation error, but the overall transport geometry is faithfully preserved. This visual confirmation supports the quantitative findings in the literature that guidance distillation can match CFG quality to within a small margin.
+
 #### Overlapping Classes
+
+The more challenging overlapping case tests whether distillation can capture the complex guidance dynamics in regions of distributional ambiguity. Figure 19 presents trajectories from the distilled model.
 
 ![Distillation Guidance Trajectory Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/flow_gaussians/overlapping/distilled/visualizations/trajectory_guidance_scales.gif?raw=true)
 *Figure 19: Trajectories from a guidance-distilled model (overlapping classes). The distilled model handles distributional overlap similarly to explicit CFG.*
 
+Figure 19 provides evidence that distillation successfully captures the complex guidance behavior in overlapping scenarios. The trajectory patterns—including the characteristic complexity in the overlap region—closely match those from explicit CFG in Figure 15. This suggests that the distillation loss adequately captures the nuanced velocity field modifications required for guidance, even in geometrically challenging configurations.
+
 ![Distillation Guidance Probability Path Overlapping](https://github.com/VigneshSrinivasan10/flow-visualizer/blob/main/outputs/flow_gaussians/overlapping/distilled/visualizations/probability_path_guidance_scales.gif?raw=true)
 *Figure 20: Probability path under guidance distillation (overlapping classes).*
+
+Figure 20 completes the distillation analysis by showing probability dynamics in the overlapping case. Comparing with Figure 16, the distilled model reproduces the intricate splitting and concentration behavior characteristic of CFG in ambiguous regions. The close correspondence between explicit CFG and distilled model outputs across all four visualization pairs (Figures 17–20) provides strong empirical support for guidance distillation as a practical technique for reducing inference cost without sacrificing guidance fidelity.
 
 ### 9.5 Tradeoffs
 
