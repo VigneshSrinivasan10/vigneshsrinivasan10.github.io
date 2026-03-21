@@ -32,7 +32,7 @@ pressure-monitor tracks pressure trends for your location and shows you what's h
 
 ## How I Actually Use It
 
-**Pressure dropping?** Heat. Now. Not later, not when the pain has already set in — now. Low pressure days are when tissues swell, joints get cranky, and everything aches more. A heating pad on a dropping-pressure day is the entire rescue team. Waiting until you're already miserable is like opening an umbrella after you're soaked.
+**Pressure dropping?** Heat. Now. Not later, not when the pain has already set in — now. Low pressure days are when tissues swell, joints get cranky, and everything aches more. A heating pad on a dropping-pressure day is the entire rescue team. Waiting until you're already miserable is like opening an umbrella after you're soaked. I also add more core exercises on these days — nothing heroic, just extra activation work to keep the stabilizers engaged while everything else is trying to swell and seize up.
 
 **Pressure stable or rising?** Walking day. But not cold. A few minutes of foam rolling or dynamic stretches to wake up the fascia first, and suddenly the walk actually loosens things up instead of making them worse. Skip the warm-up, and you're just dragging an angry spine around the block.
 
