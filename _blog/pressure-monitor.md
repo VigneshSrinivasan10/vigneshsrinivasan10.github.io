@@ -7,13 +7,13 @@ tags: [back-pain, pressure-monitor, health, open-source]
 
 ## pressure-monitor
 
-[**pressure-monitor**](https://vigneshsrinivasan10.github.io/pressure-monitor/) is a free, open-source app that tracks barometric pressure for your location. If you have chronic back pain and have ever wondered why the same body can feel fine on Monday and fall apart by Wednesday — atmospheric pressure is probably the variable nobody told you about. This app puts it front and center.
+[**pressure-monitor**](https://vigneshsrinivasan10.github.io/pressure-monitor/) is a free, open-source app that tracks air pressure for your location. If you have chronic back pain and have ever wondered why the same body can feel fine on Monday and fall apart by Wednesday — air pressure is probably the variable nobody told you about. This app puts it front and center.
 
 ## Why Would I Build This?
 
 Chronic back pain has been my uninvited roommate for many years, and I couldn't figure out why some days were manageable and others felt like my spine had a personal vendetta. Turns out, it wasn't random.
 
-The missing variable in all of this? Barometric pressure. Here's the thing nobody tells you: your body is basically a hydraulic system — fluid-filled joints, discs, tissues, all under pressure. When the atmospheric pressure outside changes, the pressure balance inside shifts too. Tissues swell, discs expand slightly. While a normal healthy back can sustain such minor changes, a back which is already reeling under immense stress, just strikes the closest things around and irritates the nerves. You're not imagining it. You're just hydraulics.
+The missing variable in all of this? Air pressure. Here's the thing nobody tells you: your body is basically a hydraulic system — fluid-filled joints, discs, tissues, all under pressure. When the air pressure outside changes, the pressure balance inside shifts too. Tissues swell, discs expand slightly. While a normal healthy back can sustain such minor changes, a back which is already reeling under immense stress, just strikes the closest things around and irritates the nerves. You're not imagining it. You're just hydraulics.
 
 <iframe src="/assets/html/pressure-animation.html" width="100%" height="580" frameborder="0" style="border-radius: 8px; margin: 1.5rem 0;"></iframe>
 
