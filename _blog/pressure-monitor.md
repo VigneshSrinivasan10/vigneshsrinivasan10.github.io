@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "My Back Hurts and It's the Weather's Fault (No, Seriously)"
+title: "Your Back Pain Has a Weather Forecast"
 date: 2026-03-17
 tags: [back-pain, pressure-monitor, health, open-source]
 ---
