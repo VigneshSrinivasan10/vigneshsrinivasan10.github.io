@@ -40,6 +40,6 @@ pressure-monitor tracks pressure trends for your location and shows you what's h
 
 ---
 
-[**Check it out on GitHub.**](https://vigneshsrinivasan10.github.io/pressure-monitor/) It won't cure anything, but it might help you stop guessing and start planning. And if you're someone whose body predicts the weather better than any forecast — you already know why this matters.
+[**Check it out on GitHub.**](https://github.com/VigneshSrinivasan10/pressure-monitor) It won't cure anything, but it might help you stop guessing and start planning. And if you're someone whose body predicts the weather better than any forecast — you already know why this matters.
 
 Stay warm out there. Especially on low pressure days.
