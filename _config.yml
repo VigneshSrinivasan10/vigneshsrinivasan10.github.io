@@ -13,20 +13,18 @@ kramdown:
   parse_block_html: true
   syntax_highlighter: rouge
 
-# Permalinks
-permalink: /blog/:year/:month/:day/:title/
-
 # Collections
 collections:
-  posts:
+  blog:
     output: true
-    permalink: /blog/:year/:month/:day/:title/
+    permalink: /blog/:title/
+    sort_by: date
 
 # Default front matter
 defaults:
   - scope:
       path: ""
-      type: "posts"
+      type: "blog"
     values:
       layout: "post"
       author: "Vignesh Srinivasan"

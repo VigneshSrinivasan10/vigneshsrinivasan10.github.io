@@ -8,8 +8,9 @@ permalink: /blog/
 
 <div class="blog-index">
 
-{% assign published_posts = site.posts | where_exp: "post", "post.wip != true" %}
-{% assign wip_posts = site.posts | where: "wip", true %}
+{% assign sorted_blog = site.blog | sort: "date" | reverse %}
+{% assign published_posts = sorted_blog | where_exp: "post", "post.wip != true" %}
+{% assign wip_posts = sorted_blog | where: "wip", true %}
 
 {% if published_posts.size > 0 %}
     <ul class="post-list">
