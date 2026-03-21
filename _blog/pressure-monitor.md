@@ -15,7 +15,7 @@ Chronic back pain has been my uninvited roommate for many years, and I couldn't 
 
 The missing variable in all of this? Barometric pressure. Here's the thing nobody tells you: your body is basically a hydraulic system — fluid-filled joints, discs, tissues, all under pressure. When the atmospheric pressure outside changes, the pressure balance inside shifts too. Tissues swell, discs expand slightly. While a normal healthy back can sustain such minor changes, a back which is already reeling under immense stress, just strikes the closest things around and irritates the nerves. You're not imagining it. You're just hydraulics.
 
-<iframe src="/assets/pressure-animation.html" width="100%" height="580" frameborder="0" style="border-radius: 8px; margin: 1.5rem 0;"></iframe>
+<iframe src="/assets/html/pressure-animation.html" width="100%" height="580" frameborder="0" style="border-radius: 8px; margin: 1.5rem 0;"></iframe>
 
 
 ## The Problem With Good Advice
