@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pressure Animation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0f172a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: #e2e8f0;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .main {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .gauge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .gauge-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+
+  .gauge-bar {
+    width: 36px;
+    height: 200px;
+    background: #1e293b;
+    border-radius: 18px;
+    border: 2px solid #334155;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gauge-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0 0 16px 16px;
+    transition: height 0.1s linear;
+  }
+
+  .gauge-value {
+    font-size: 1.6rem;
+    font-weight: 600;
+    transition: color 0.3s;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .gauge-unit {
+    font-size: 0.6rem;
+    color: #64748b;
+    letter-spacing: 0.08em;
+  }
+
+  .status {
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.5s;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .controls {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-start {
+    color: #4ade80;
+    border: 2px solid #4ade80;
+  }
+
+  .btn-start:disabled {
+    background: #1e293b;
+    color: #475569;
+    border-color: #334155;
+    cursor: not-allowed;
+  }
+
+  .btn-reset {
+    color: #64748b;
+    border: 2px solid #334155;
+    font-weight: 400;
+  }
+
+  @keyframes nerve-pulse {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .floating { animation: float 2s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<div class="title">You Are a Hydraulic System</div>
+
+<div class="main">
+  <div class="gauge">
+    <div class="gauge-label">Barometric Pressure</div>
+    <div class="gauge-bar">
+      <div class="gauge-fill" id="gaugeFill"></div>
+    </div>
+    <div class="gauge-value" id="gaugeValue">1013</div>
+    <div class="gauge-unit">hPa</div>
+  </div>
+
+  <svg id="figure" width="220" height="360" viewBox="0 0 220 360">
+    <!-- Head (fixed size) -->
+    <circle cx="110" cy="50" r="28" fill="none" stroke="#e2e8f0" stroke-width="3"/>
+    <circle cx="100" cy="45" r="2.5" fill="#e2e8f0"/>
+    <circle cx="120" cy="45" r="2.5" fill="#e2e8f0"/>
+    <path id="mouth" d="M 100 56 Q 110 62 120 56" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Body (dynamic thickness) -->
+    <line id="neck" x1="110" y1="78" x2="110" y2="100" stroke="#e2e8f0"/>
+    <line id="torso" x1="110" y1="100" x2="110" y2="210" stroke="#e2e8f0"/>
+    <line id="armL" x1="110" y1="120" x2="60" y2="170" stroke="#e2e8f0"/>
+    <line id="armR" x1="110" y1="120" x2="160" y2="170" stroke="#e2e8f0"/>
+    <line id="legL" x1="110" y1="210" x2="75" y2="300" stroke="#e2e8f0"/>
+    <line id="legR" x1="110" y1="210" x2="145" y2="300" stroke="#e2e8f0"/>
+    <line id="footL" x1="75" y1="300" x2="60" y2="300" stroke="#e2e8f0" stroke-linecap="round"/>
+    <line id="footR" x1="145" y1="300" x2="160" y2="300" stroke="#e2e8f0" stroke-linecap="round"/>
+
+    <!-- Spinal cord -->
+    <path id="spine-nerve" d="M 110 80 C 108 120 112 160 110 210" fill="none" stroke-linecap="round"/>
+
+    <!-- Neck nerves -->
+    <path class="nerve" d="M 110 85 C 105 87 100 85 96 87" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 92 C 105 94 100 92 95 95" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 85 C 115 87 120 85 124 87" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 92 C 115 94 120 92 125 95" fill="none" stroke-linecap="round"/>
+
+    <!-- Upper back nerves -->
+    <path class="nerve" d="M 110 120 C 105 122 98 120 93 123" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 120 C 115 122 122 120 127 123" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 140 C 104 143 98 140 93 143" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 140 C 116 143 122 140 127 143" fill="none" stroke-linecap="round"/>
+
+    <!-- Lower back nerves -->
+    <path class="nerve" d="M 110 170 C 104 173 97 170 91 174" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 170 C 116 173 123 170 129 174" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 190 C 103 194 96 190 90 194" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 190 C 117 194 124 190 130 194" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 205 C 104 208 97 205 91 209" fill="none" stroke-linecap="round"/>
+    <path class="nerve" d="M 110 205 C 116 208 123 205 129 209" fill="none" stroke-linecap="round"/>
+
+    <!-- Nerve endings -->
+    <circle class="ending" cx="96" cy="87"/>
+    <circle class="ending" cx="95" cy="95"/>
+    <circle class="ending" cx="124" cy="87"/>
+    <circle class="ending" cx="125" cy="95"/>
+    <circle class="ending" cx="93" cy="123"/>
+    <circle class="ending" cx="127" cy="123"/>
+    <circle class="ending" cx="93" cy="143"/>
+    <circle class="ending" cx="127" cy="143"/>
+    <circle class="ending" cx="91" cy="174"/>
+    <circle class="ending" cx="129" cy="174"/>
+    <circle class="ending" cx="90" cy="194"/>
+    <circle class="ending" cx="130" cy="194"/>
+    <circle class="ending" cx="91" cy="209"/>
+    <circle class="ending" cx="129" cy="209"/>
+
+    <!-- Labels (hidden initially) -->
+    <text id="labelIrritated" x="42" y="175" fill="#ef4444" font-size="9" font-family="JetBrains Mono" font-weight="600" opacity="0">← irritated</text>
+    <text id="labelSwelling" x="138" y="198" fill="#ef4444" font-size="9" font-family="JetBrains Mono" font-weight="600" opacity="0">swelling ←</text>
+  </svg>
+</div>
+
+<div class="status" id="status">Pressure normal — nerves at rest</div>
+
+<div class="controls">
+  <button class="btn btn-start" id="btnStart" onclick="startAnimation()">▶ Drop Pressure</button>
+  <button class="btn btn-reset" onclick="resetAnimation()">↺ Reset</button>
+</div>
+
+<script>
+const MIN = 980, MAX = 1013, RANGE = MAX - MIN;
+const bodyParts = ['neck','torso','armL','armR','legL','legR','footL','footR'].map(id => document.getElementById(id));
+const nerves = document.querySelectorAll('.nerve');
+const spineNerve = document.getElementById('spine-nerve');
+const endings = document.querySelectorAll('.ending');
+const gaugeFill = document.getElementById('gaugeFill');
+const gaugeValue = document.getElementById('gaugeValue');
+const mouth = document.getElementById('mouth');
+const figure = document.getElementById('figure');
+const status = document.getElementById('status');
+const btnStart = document.getElementById('btnStart');
+const labelIrr = document.getElementById('labelIrritated');
+const labelSwell = document.getElementById('labelSwelling');
+
+let pressure = MAX, animId = null, phase = 'normal';
+
+function nerveColor(t) {
+  const r = Math.round(74 + t * (239 - 74));
+  const g = Math.round(222 + t * (68 - 222));
+  const b = Math.round(128 + t * (68 - 128));
+  return `rgb(${r},${g},${b})`;
+}
+
+function update(p) {
+  pressure = p;
+  const t = 1 - (p - MIN) / RANGE;
+  const col = nerveColor(t);
+  const glow = t * 6;
+  const bodyW = 3 + t * 4;
+  const nerveW = 0.8 + t * 0.8;
+  const endR = 1.5 + t * 1.5;
+
+  // Gauge
+  gaugeFill.style.height = ((p - MIN) / RANGE * 100) + '%';
+  gaugeFill.style.background = `linear-gradient(to top, ${col}, #4ade80)`;
+  gaugeValue.textContent = p;
+  gaugeValue.style.color = col;
+
+  // Body thickness
+  bodyParts.forEach(el => { el.setAttribute('stroke-width', bodyW); });
+
+  // Face
+  mouth.setAttribute('d', t > 0.5 ? 'M 100 58 Q 110 52 120 58' : 'M 100 56 Q 110 62 120 56');
+
+  // Nerves
+  const filter = glow > 0 ? `drop-shadow(0 0 ${glow}px ${col})` : 'none';
+  [spineNerve, ...nerves].forEach(n => {
+    n.setAttribute('stroke', col);
+    n.setAttribute('stroke-width', nerveW);
+    n.style.filter = filter;
+  });
+
+  // Endings
+  endings.forEach(e => {
+    e.setAttribute('r', endR);
+    e.setAttribute('fill', col);
+    e.style.filter = glow > 0 ? `drop-shadow(0 0 ${glow + 2}px ${col})` : 'none';
+  });
+
+  // Pulse animation
+  if (t > 0.1) {
+    const speed = (1.2 - t * 0.6) + 's';
+    [...nerves, spineNerve, ...endings].forEach(el => {
+      el.style.animation = `nerve-pulse ${speed} ease-in-out infinite alternate`;
+    });
+  } else {
+    [...nerves, spineNerve, ...endings].forEach(el => { el.style.animation = 'none'; });
+  }
+
+  // Labels
+  const labelOp = t > 0.6 ? Math.min(1, (t - 0.6) * 2.5) : 0;
+  labelIrr.setAttribute('opacity', labelOp);
+  labelSwell.setAttribute('opacity', labelOp);
+  if (labelOp > 0) {
+    const lf = `drop-shadow(0 0 6px #ef4444)`;
+    labelIrr.style.filter = lf;
+    labelSwell.style.filter = lf;
+  }
+
+  // Float at low
+  if (phase === 'low') figure.classList.add('floating');
+  else figure.classList.remove('floating');
+
+  // Status
+  if (phase === 'normal') {
+    status.textContent = 'Pressure normal — nerves at rest';
+    status.style.color = '#94a3b8'; status.style.fontWeight = 300;
+  } else if (phase === 'dropping') {
+    status.style.color = t > 0.5 ? '#ef4444' : '#94a3b8';
+    status.style.fontWeight = t > 0.5 ? 600 : 300;
+    if (t < 0.3) status.textContent = 'Pressure dropping...';
+    else if (t < 0.6) status.textContent = 'Tissues beginning to swell...';
+    else status.textContent = 'Nerve endings under pressure — pain increasing';
+  } else if (phase === 'low') {
+    status.textContent = 'Low pressure — this is when you feel it';
+    status.style.color = '#ef4444'; status.style.fontWeight = 600;
+  }
+}
+
+function startAnimation() {
+  if (phase === 'dropping') return;
+  btnStart.disabled = true;
+  phase = 'dropping';
+  update(MAX);
+  const start = performance.now();
+
+  function tick(now) {
+    const elapsed = now - start;
+    if (elapsed < 3000) {
+      const progress = elapsed / 3000;
+      const eased = 1 - Math.pow(1 - progress, 3);
+      update(Math.round(MAX - eased * RANGE));
+      animId = requestAnimationFrame(tick);
+    } else {
+      phase = 'low';
+      update(MIN);
+      setTimeout(() => { btnStart.disabled = false; }, 2000);
+    }
+  }
+  animId = requestAnimationFrame(tick);
+}
+
+function resetAnimation() {
+  if (animId) cancelAnimationFrame(animId);
+  phase = 'normal';
+  btnStart.disabled = false;
+  update(MAX);
+}
+
+update(MAX);
+</script>
+</body>
+</html>
